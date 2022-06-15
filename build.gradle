@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'de.doetsch'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    implementation 'com.discord4j:discord4j-core:3.2.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName = 'de.doetsch.mensabot.main.BotMain'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "de.doetsch.mensabot.main.BotMain"
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
