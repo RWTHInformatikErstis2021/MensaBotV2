@@ -2,6 +2,8 @@ package de.doetsch.mensabot.commands;
 
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ApplicationCommandInteractionEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.function.TupleUtils;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandHandler {
+	
+	private static final Logger logger = LogManager.getLogger(CommandHandler.class);
 	
 	public Mono<Void> register(GatewayDiscordClient client){
 		return Mono.zip(
