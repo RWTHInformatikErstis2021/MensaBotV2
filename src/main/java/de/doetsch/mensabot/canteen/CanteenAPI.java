@@ -51,7 +51,7 @@ public class CanteenAPI {
 			try{
 				ObjectMapper mapper = new ObjectMapper();
 				ArrayNode canteensNode = (ArrayNode)mapper.readTree(content);
-				List<Canteen> canteens = mapper.convertValue(canteensNode, List.class);
+				List<Canteen> canteens = List.of(mapper.convertValue(canteensNode, Canteen[].class));
 				return Tuples.of(canteens, nextPage);
 			}catch(JsonProcessingException ex){
 				// TODO log
@@ -67,7 +67,7 @@ public class CanteenAPI {
 			try{
 				ObjectMapper mapper = new ObjectMapper();
 				for(JsonNode dayNode : mapper.readTree(content)){
-					List<Meal> rawMeals = mapper.convertValue(dayNode.get("meals"), List.class);
+					List<Meal> rawMeals = List.of(mapper.convertValue(dayNode.get("meals"), Meal[].class));
 					List<Meal> meals = new ArrayList<>();
 					for(Meal meal : rawMeals){
 						if(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage")){

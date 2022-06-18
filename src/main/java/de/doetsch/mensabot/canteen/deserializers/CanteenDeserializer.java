@@ -3,7 +3,6 @@ package de.doetsch.mensabot.canteen.deserializers;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -12,14 +11,8 @@ import de.doetsch.mensabot.canteen.Canteen;
 import java.io.IOException;
 
 public class CanteenDeserializer extends StdDeserializer<Canteen> {
-	protected CanteenDeserializer(Class<?> vc){
-		super(vc);
-	}
-	protected CanteenDeserializer(JavaType valueType){
-		super(valueType);
-	}
-	protected CanteenDeserializer(StdDeserializer<?> src){
-		super(src);
+	public CanteenDeserializer(){
+		super((Class<?>)null);
 	}
 	
 	@Override
