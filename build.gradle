@@ -18,7 +18,8 @@ dependencies {
 	implementation 'org.apache.logging.log4j:log4j-api:2.17.2'
 	implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-	implementation 'com.github.ben-manes.caffeine:caffeine:3.1.0'
+	//implementation 'com.github.ben-manes.caffeine:caffeine:3.1.1'
+	implementation 'io.github.cdimascio:dotenv-java:2.2.4'
 }
 
 test {

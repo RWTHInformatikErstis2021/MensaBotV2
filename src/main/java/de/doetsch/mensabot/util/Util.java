@@ -1,6 +1,5 @@
 package de.doetsch.mensabot.util;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
@@ -23,10 +22,6 @@ public class Util {
 	public static String pad(int number, int length){
 		String s = Integer.toString(number);
 		return "0".repeat(Math.max(0, length - s.length())) + s;
-	}
-	
-	public static String formatPrice(double price){
-		return String.format("%.2f", price);
 	}
 	
 	/**

@@ -1,11 +1,18 @@
 package de.doetsch.mensabot.canteen;
 
+import de.doetsch.mensabot.util.Util;
+import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.function.TupleUtils;
+import reactor.util.function.Tuples;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CanteenUtil {
 	
@@ -66,20 +73,42 @@ public class CanteenUtil {
 			Map.entry(0.2, ""),
 			Map.entry(0.1, "")
 	);
-	public static String formatRating(double rating, int ratingCount){
-		int full = (int)rating;
-		double remaining = rating - full;
-		return ":star:".repeat(full) + ratingEmojis.stream().filter(entry -> remaining >= entry.getKey()).findFirst().map(Map.Entry::getValue).orElse("") + "(" + ratingCount + ")";
+	public static String formatRating(Meal.Rating rating){
+		int full = (int)rating.getRating();
+		double remaining = rating.getRating() - full;
+		return ":star:".repeat(full) + ratingEmojis.stream().filter(entry -> remaining >= entry.getKey()).findFirst().map(Map.Entry::getValue).orElse("") + "(" + rating.getRatingCount() + ")";
+	}
+	
+	public static String formatPrice(double price){
+		return String.format("%.2f€", price);
 	}
 	
 	public static Mono<EmbedCreateSpec> getMealsEmbed(Canteen canteen, Instant date){
-		return canteen.getMeals(date).map(meals -> {
-			// TODO implement
-			return EmbedCreateSpec.builder().build();
-		}).defaultIfEmpty(EmbedCreateSpec.builder()
-				.title(canteen.getName() + " ist geschlossen.")
-				.build()
-		);
+		return canteen.getMeals(date)
+				.flatMapMany(Flux::fromIterable)
+				.flatMapSequential(meal -> meal.getRating().map(rating -> Tuples.of(meal, Optional.of(rating))).defaultIfEmpty(Tuples.of(meal, Optional.empty())))
+				.collectList()
+				.map(meals -> EmbedCreateSpec.builder()
+						.title("Gerichte in " + canteen.getName())
+						.description(Util.formatDate(date))
+						.addAllFields(meals.stream().map(TupleUtils.function((meal, rating) -> {
+							String mealTitle = getEmojiForMeal(meal) + " " + meal.name();
+							if(rating.isPresent()) mealTitle += " " + formatRating(rating.get());
+							String mealDescription = meal.category();
+							double price = meal.getStudentPrice();
+							if(price > 0){
+								mealDescription += "\n" + formatPrice(price);
+								double othersPrice = meal.getOthersPrice();
+								if(othersPrice > 0 && othersPrice != price) mealDescription += " (" + formatPrice(othersPrice) + ")";
+							}
+							boolean shouldInline = !(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage"));
+							return EmbedCreateFields.Field.of(mealTitle, mealDescription, shouldInline);
+						})).collect(Collectors.toList()))
+						.build()
+				).defaultIfEmpty(EmbedCreateSpec.builder()
+						.title(canteen.getName() + " ist geschlossen.")
+						.build()
+				);
 	}
 	
 }

@@ -1,6 +1,7 @@
 package de.doetsch.mensabot.canteen;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +14,9 @@ import reactor.util.function.Tuples;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CanteenAPI {
 	
@@ -57,18 +60,39 @@ public class CanteenAPI {
 		}));
 	}
 	
-	public static Mono<List<Meal>> getMeals(int mensaId, String date){
-		return client.get().uri("/canteens/" + mensaId + "/days/" + date + "/meals").responseSingle((response, rawBody) -> rawBody.asString().flatMap(content -> {
+	public static Mono<Map<String, List<Meal>>> getMeals(int mensaId){
+		return client.get().uri("/canteens/" + mensaId + "/meals").responseSingle((response, rawBody) -> rawBody.asString().flatMap(content -> {
 			if(response.status().code() == 404) return Mono.empty();
-			List<Meal> meals = new ArrayList<>();
+			Map<String, List<Meal>> days = new HashMap<>();
 			try{
 				ObjectMapper mapper = new ObjectMapper();
-				ArrayNode mealsNode = (ArrayNode)mapper.readTree(content);
-				meals.addAll(mapper.convertValue(mealsNode, List.class));
+				for(JsonNode dayNode : mapper.readTree(content)){
+					List<Meal> rawMeals = mapper.convertValue(dayNode.get("meals"), List.class);
+					List<Meal> meals = new ArrayList<>();
+					for(Meal meal : rawMeals){
+						if(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage")){
+							if(meal.name().strip().endsWith(" oder")){
+								String newName = meal.name().strip();
+								newName = newName.substring(0, newName.length() - 5);
+								meals.add(new Meal(meal.id(), newName, meal.notes(), meal.category(), meal.prices()));
+							}else if(meal.name().contains(" oder ")){
+								String[] mealNames = meal.name().split(" oder ");
+								for(String mealName : mealNames){
+									meals.add(new Meal(meal.id(), mealName.strip(), meal.notes(), meal.category(), meal.prices()));
+								}
+							}else{
+								meals.add(meal);
+							}
+						}else{
+							meals.add(meal);
+						}
+					}
+					days.put(dayNode.get("date").asText(), meals);
+				}
 			}catch(JsonProcessingException e){
 				// TODO log
 			}
-			return Mono.just(meals);
+			return Mono.just(days);
 		}));
 	}
 	

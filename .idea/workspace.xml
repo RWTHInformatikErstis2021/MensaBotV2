@@ -4,18 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Add command handling and canteen fetching">
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/CanteenDeserializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/MealDeserializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" afterDir="false" />
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Implement more canteen stuff">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.env.template" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,26 +91,6 @@
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
-  <component name="RunManager">
-    <configuration name="de.doetsch.mensabot.canteen.CanteenAPI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.doetsch.mensabot.canteen.CanteenAPI" />
-      <module name="MensaBotV2.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="de.doetsch.mensabot.canteen.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.de.doetsch.mensabot.canteen.CanteenAPI" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -124,7 +104,10 @@
       <workItem from="1655420875647" duration="1923000" />
       <workItem from="1655462468398" duration="6661000" />
       <workItem from="1655476712069" duration="3373000" />
-      <workItem from="1655492903191" duration="5070000" />
+      <workItem from="1655492903191" duration="5790000" />
+      <workItem from="1655513165888" duration="568000" />
+      <workItem from="1655513829383" duration="316000" />
+      <workItem from="1655546320982" duration="5425000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1655336619322</created>
@@ -140,7 +123,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655385797810</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Implement more canteen stuff">
+      <created>1655504471894</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1655504471895</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,7 +150,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Add command handling and canteen fetching" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add command handling and canteen fetching" />
+    <MESSAGE value="Implement more canteen stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement more canteen stuff" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

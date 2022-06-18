@@ -1,8 +1,6 @@
 package de.doetsch.mensabot.canteen;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import de.doetsch.mensabot.canteen.deserializers.CanteenDeserializer;
 import de.doetsch.mensabot.util.Util;
 import org.apache.logging.log4j.LogManager;
@@ -14,37 +12,39 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @JsonDeserialize(using=CanteenDeserializer.class)
 public final class Canteen {
 	
 	private static final Logger logger = LogManager.getLogger(Canteen.class);
+	
 	private final int id;
 	private final String name;
 	private final String city;
 	private final String address;
 	private final Coordinates coordinates;
 	
-	public Canteen(int id, String name, String city, String address,
-								 Coordinates coordinates){
+	public Canteen(int id, String name, String city, String address, Coordinates coordinates){
 		this.id = id;
 		this.name = name;
 		this.city = city;
 		this.address = address;
 		this.coordinates = coordinates;
+		this.mealsMono = CanteenAPI.getMeals(id).cache(Duration.of(30, ChronoUnit.MINUTES));
 	}
 	
 	public record Coordinates(double x, double y) {
 	}
 	
-	private final Cache<String, Mono<List<Meal>>> mealCache = Caffeine.newBuilder()
-			.expireAfterWrite(Duration.of(24, ChronoUnit.HOURS))
-			.build();
+	private final Mono<Map<String, List<Meal>>> mealsMono;
+	public Mono<Map<String, List<Meal>>> getMeals(){
+		return mealsMono;
+	}
 	public Mono<List<Meal>> getMeals(Instant instant){
 		String date = Util.formatDate(instant);
-		return mealCache.get(date, s -> CanteenAPI.getMeals(id, s).cache(Duration.of(30, ChronoUnit.MINUTES)));
+		return mealsMono.flatMapIterable(Map::entrySet).filter(entry -> entry.getKey().equals(date)).next().map(Map.Entry::getValue);
 	}
 	
 	public int getId(){return id;}
@@ -81,18 +81,21 @@ public final class Canteen {
 	}
 	
 	public enum DefaultCanteen {
-		ACADEMICA(187),
-		BISTRO(94),
-		VITA(96),
-		AHORN(95),
-		BAYERNALLEE(97),
-		JUELICH(100)
+		ACADEMICA(187, "Academica"),
+		BISTRO(94, "Bistro"),
+		VITA(96, "Vita"),
+		AHORN(95, "Ahornstraße"),
+		BAYERNALLEE(97, "Bayernallee"),
+		JUELICH(100, "Jülich")
 		;
 		private final int id;
-		private DefaultCanteen(int id){
+		private final String displayName;
+		DefaultCanteen(int id, String displayName){
 			this.id = id;
+			this.displayName = displayName;
 		}
 		public int getId(){return id;}
+		public String getDisplayName(){return displayName;}
 	}
 	
 }
