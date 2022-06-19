@@ -85,9 +85,13 @@ public class CanteenUtil {
 	
 	public static Mono<EmbedCreateSpec> getMealsEmbed(Canteen canteen, Instant date){
 		return canteen.getMeals(date)
-				.flatMapMany(Flux::fromIterable)
-				.flatMapSequential(meal -> meal.getRating().map(rating -> Tuples.of(meal, Optional.of(rating))).defaultIfEmpty(Tuples.of(meal, Optional.empty())))
-				.collectList()
+				.flatMap(meals -> Flux.fromIterable(meals)
+						.flatMapSequential(meal -> meal.getRating()
+								.map(rating -> Tuples.of(meal, Optional.of(rating)))
+								.defaultIfEmpty(Tuples.of(meal, Optional.empty()))
+						)
+						.collectList()
+				)
 				.map(meals -> EmbedCreateSpec.builder()
 						.title("Gerichte in " + canteen.getName())
 						.description(Util.formatDate(date))
