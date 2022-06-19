@@ -12,6 +12,7 @@ import reactor.netty.http.client.HttpClient;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class CanteenAPI {
 	}
 	
 	private static Mono<Tuple2<List<Canteen>, Integer>> requestCanteenPage(int page){
-		return client.get().uri("/canteens/?page=" + page).responseSingle((response, rawBody) -> rawBody.asString().map(content -> {
+		return client.get().uri("/canteens/?page=" + page).responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).map(content -> {
 			int nextPage = -1;
 			try{
 				int totalPages = Integer.parseInt(response.responseHeaders().get("X-Total-Pages"));
@@ -61,8 +62,7 @@ public class CanteenAPI {
 	}
 	
 	public static Mono<Map<String, List<Meal>>> getMeals(int mensaId){
-		return client.get().uri("/canteens/" + mensaId + "/meals").responseSingle((response, rawBody) -> rawBody.asString().flatMap(content -> {
-			if(response.status().code() == 404) return Mono.empty();
+		return client.get().uri("/canteens/" + mensaId + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {;
 			Map<String, List<Meal>> days = new HashMap<>();
 			try{
 				ObjectMapper mapper = new ObjectMapper();
