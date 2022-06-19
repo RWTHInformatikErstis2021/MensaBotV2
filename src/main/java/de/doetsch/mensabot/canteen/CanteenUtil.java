@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CanteenUtil {
@@ -109,10 +110,39 @@ public class CanteenUtil {
 							return EmbedCreateFields.Field.of(mealTitle, mealDescription, shouldInline);
 						})).collect(Collectors.toList()))
 						.build()
-				).defaultIfEmpty(EmbedCreateSpec.builder()
+				)
+				.defaultIfEmpty(EmbedCreateSpec.builder()
 						.title(canteen.getName() + " ist geschlossen.")
 						.build()
 				);
+	}
+	
+	public static double scoreCanteenSearchMatch(Canteen canteen, String search){
+		String canteenName = canteen.getName().toLowerCase();
+		String canteenCity = canteen.getCity().toLowerCase();
+		return scoreSearchMatch(search.toLowerCase(), canteenName, canteenCity);
+	}
+	
+	public static double scoreMealSearchMatch(Meal meal, String search){
+		String mealName = meal.name().toLowerCase();
+		String mealCategory = meal.category().toLowerCase();
+		return scoreSearchMatch(search.toLowerCase(), mealName, mealCategory);
+	}
+	
+	private static final Pattern whitespace = Pattern.compile(" ");
+	private static double scoreSearchMatch(String search, String name, String secondary){
+		if(name.equals(search)) return 1;
+		String[] searchParts = whitespace.split(search);
+		List<String> nameParts = List.of(whitespace.split(name));
+		double score = 0;
+		for(String part : searchParts){
+			if(secondary.equals(part)) score += 1.5 / searchParts.length;
+			else if(nameParts.contains(part)) score += 1.0 / searchParts.length;
+			else if(nameParts.stream().anyMatch(namePart -> namePart.contains(part))) score += 0.8 / searchParts.length;
+			else if(secondary.contains(search)) score += 0.5 / searchParts.length;
+			else score -= 0.9 / searchParts.length;
+		}
+		return score;
 	}
 	
 }
