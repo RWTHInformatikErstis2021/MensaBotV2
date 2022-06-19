@@ -4,18 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Implement more canteen stuff">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.env.template" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Add command autocompletion capability">
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/Rating.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.template" beforeDir="false" afterPath="$PROJECT_DIR$/.env.template" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,12 +60,24 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/build.gradle" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/Rating.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -79,17 +90,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reactor&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "extract.method.default.visibility": "private",
+    "last_opened_file_path": "C:/Users/Aaron/Workspaces/IntelliJ/MensaBotV2/src/main/resources/schema.sql",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reactor"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
+  </component>
+  <component name="RunManager" selected="Application.BotMain">
+    <configuration name="BotMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="de.doetsch.mensabot.main.BotMain" />
+      <module name="MensaBotV2.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.doetsch.mensabot.main.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CanteenAPI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="de.doetsch.mensabot.canteen.CanteenAPI" />
+      <module name="MensaBotV2.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.doetsch.mensabot.canteen.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.CanteenAPI" />
+        <item itemvalue="Application.BotMain" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -107,7 +160,9 @@
       <workItem from="1655492903191" duration="5790000" />
       <workItem from="1655513165888" duration="568000" />
       <workItem from="1655513829383" duration="316000" />
-      <workItem from="1655546320982" duration="5425000" />
+      <workItem from="1655546320982" duration="17317000" />
+      <workItem from="1655580223178" duration="214000" />
+      <workItem from="1655580467474" duration="20365000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1655336619322</created>
@@ -130,7 +185,35 @@
       <option name="project" value="LOCAL" />
       <updated>1655504471895</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Complete Canteen API parts not needing a database">
+      <created>1655557560721</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1655557560721</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fix canteen and meal deserialization">
+      <created>1655562136073</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1655562136073</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Fix charset issues">
+      <created>1655633825633</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1655633825633</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add command autocompletion capability">
+      <created>1655659396874</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1655659396874</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,7 +234,12 @@
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Add command handling and canteen fetching" />
     <MESSAGE value="Implement more canteen stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement more canteen stuff" />
+    <MESSAGE value="Complete Canteen API parts not needing a database" />
+    <MESSAGE value="Fix canteen and meal deserialization" />
+    <MESSAGE value="Fix charset issues" />
+    <MESSAGE value="Add command autocompletion capability" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add command autocompletion capability" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

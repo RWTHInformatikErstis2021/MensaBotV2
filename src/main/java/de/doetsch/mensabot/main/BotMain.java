@@ -1,5 +1,7 @@
 package de.doetsch.mensabot.main;
 
+import de.doetsch.mensabot.commands.CommandHandler;
+import de.doetsch.mensabot.data.DatabaseConfig;
 import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -15,12 +17,12 @@ public class BotMain {
 	
 	public static void main(String[] args){
 		logger.info("Program starting");
-		
 		DiscordClient discordClient = DiscordClientBuilder.create(dotenv.get("DISCORD_BOT_TOKEN"))
 				.build();
-		discordClient.withGateway(client -> Mono.when(
-				EventHandler.subscribe(client)
-		).then(client.onDisconnect())).block();
+		DatabaseConfig.initializeDatabase().then(discordClient.withGateway(client -> Mono.when(
+				EventHandler.subscribe(client),
+				CommandHandler.register(client)
+		).then(client.onDisconnect()))).block();
 		
 		logger.info("Program exiting");
 	}

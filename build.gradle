@@ -20,6 +20,8 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 	//implementation 'com.github.ben-manes.caffeine:caffeine:3.1.1'
 	implementation 'io.github.cdimascio:dotenv-java:2.2.4'
+	implementation 'io.r2dbc:r2dbc-spi:1.0.0.RELEASE'
+	implementation 'io.r2dbc:r2dbc-postgresql:0.8.12.RELEASE'
 }
 
 test {
