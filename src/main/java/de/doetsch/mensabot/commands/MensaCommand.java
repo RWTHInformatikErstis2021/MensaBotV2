@@ -3,19 +3,23 @@ package de.doetsch.mensabot.commands;
 import de.doetsch.mensabot.canteen.Canteen;
 import de.doetsch.mensabot.canteen.CanteenAPI;
 import de.doetsch.mensabot.canteen.CanteenUtil;
+import de.doetsch.mensabot.util.Util;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,20 +86,33 @@ public class MensaCommand extends Command {
 	@Override
 	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event){
 		if(event.getFocusedOption().getName().equals("tag")){
+			String input = event.getFocusedOption().getValue()
+					.map(ApplicationCommandInteractionOptionValue::getRaw)
+					.orElse("");
+			int canteenId = event.getOption("canteen")
+					.flatMap(ApplicationCommandInteractionOption::getValue)
+					.map(value -> (int)value.asLong())
+					.orElse(Canteen.DefaultCanteen.ACADEMICA.getId());
 			Map<String, Integer> dates = new HashMap<>();
 			dates.put("gestern", -1);
 			dates.put("heute", 0);
 			dates.put("morgen", 1);
 			dates.put("übermorgen", 2);
-			// TODO erweitern, so wie es jetzt ist wären auch direkte choices möglich
-			return event.respondWithSuggestions(dates.entrySet().stream()
+			return CanteenAPI.getCanteen(canteenId)
+					.flatMap(Canteen::getMeals)
+					.flatMapIterable(Map::keySet)
+					.sort()
+					.map(date -> Map.entry(date, Util.dateToDayDifference(date)))
+					.mergeWith(Flux.fromIterable(dates.entrySet()))
+					.filter(entry -> entry.getKey().startsWith(input))
+					.take(25)
 					.map(entry -> ApplicationCommandOptionChoiceData.builder()
 							.name(entry.getKey())
 							.value(entry.getValue())
 							.build()
 					)
-					.collect(Collectors.toList())
-			);
+					.collectList()
+					.flatMap(options -> event.respondWithSuggestions(new ArrayList<>(options)));
 		}
 		return Mono.empty();
 	}
