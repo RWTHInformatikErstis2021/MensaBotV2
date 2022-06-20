@@ -26,7 +26,7 @@ public class DatabaseConfig {
 	}
 	
 	public static Mono<Boolean> initializeDatabase(){
-		if(true) return Mono.empty(); // TODO remove
+		if(true) return Mono.just(true); // TODO remove
 		// (i currently dont have postgresql set up on my machine and am lazy to set it up rn)
 		return getConnection().flatMapMany(connection -> connection.createStatement(
 				"CREATE TABLE IF NOT EXISTS ratings (\n" +
