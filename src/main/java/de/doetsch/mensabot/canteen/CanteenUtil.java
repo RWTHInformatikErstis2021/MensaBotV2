@@ -26,10 +26,12 @@ public class CanteenUtil {
 			Tuples.of("schnitzel", "<:schnitzel:943559144135336047>"),
 			Tuples.of("burger", ":hamburger:"),
 			Tuples.of("pizza", ":pizza:"),
+			Tuples.of("bbq drumsticks", ":poultry_legt:"),
 			Tuples.of("pfannkuchen", ":pancakes:"),
 			Tuples.of("kuchen", ":cake:"),
 			Tuples.of("küchlein", ":cake:"),
 			Tuples.of("spaghetti", ":spaghetti:"),
+			Tuples.of("penne rigate", ":spaghetti:"),
 			Tuples.of("suppe", ":stew:"),
 			Tuples.of("keule", ":poultry_leg:"),
 			Tuples.of("steak", ":cut_of_meat:"),
@@ -38,8 +40,11 @@ public class CanteenUtil {
 			Tuples.of("fisch", ":fish:"),
 			Tuples.of("lachs", ":fish:"),
 			Tuples.of("reis", ":rice:"),
+			//Tuples.of("kürbis", ":pumpkin:"), wieso gibt es kein kürbis emoj??
 			Tuples.of("pommes", ":fries:"),
 			Tuples.of("apfel", ":apple:"),
+			Tuples.of("dumpling", ":dumpling:"),
+			Tuples.of("shrimp", ":fried_shrimp:"),
 			Tuples.of("brokkoli", ":broccoli:"),
 			Tuples.of("paprika", ":bell_pepper:"),
 			Tuples.of("mais", ":corn:"),
@@ -48,11 +53,14 @@ public class CanteenUtil {
 			Tuples.of("salat", ":salad:"),
 			Tuples.of("eintopf", ":stew:"),
 			Tuples.of("käse", ":cheese:"),
+			Tuples.of("speck", ":bacon:"),
 			Tuples.of("zwiebel", ":onion:"),
 			Tuples.of("chili", ":hot_pepper:"),
-			Tuples.of("scharf", ":hot_pepper:")
+			Tuples.of("scharf", ":hot_pepper:"),
+			Tuples.of("knoblauch", ":garlic:")
 	);
 	private static final Map<String, String> categoryEmojis = Map.ofEntries(
+			Map.entry("tellergericht", ":bread:"),
 			Map.entry("vegetarisch", ":leafy_green:"),
 			Map.entry("klassiker", ":cut_of_meat:"),
 			Map.entry("burger der woche", ":hamburger:"),
