@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Add match scoring for meal/canteen search">
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Update canteen command auto completion">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/CanteenDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/CanteenDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/MealDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/MealDeserializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +111,7 @@
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
-  <component name="RunManager" selected="Application.Canteen">
+  <component name="RunManager">
     <configuration name="BotMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="de.doetsch.mensabot.main.BotMain" />
       <module name="MensaBotV2.main" />
@@ -119,36 +125,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Canteen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.doetsch.mensabot.canteen.Canteen" />
-      <module name="MensaBotV2.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="de.doetsch.mensabot.canteen.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CanteenAPI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.doetsch.mensabot.canteen.CanteenAPI" />
-      <module name="MensaBotV2.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="de.doetsch.mensabot.canteen.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Canteen" />
-        <item itemvalue="Application.CanteenAPI" />
         <item itemvalue="Application.BotMain" />
       </list>
     </recent_temporary>
@@ -172,7 +150,7 @@
       <workItem from="1655546320982" duration="17317000" />
       <workItem from="1655580223178" duration="214000" />
       <workItem from="1655580467474" duration="21489000" />
-      <workItem from="1655680335023" duration="2724000" />
+      <workItem from="1655680335023" duration="10919000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1655336619322</created>
@@ -237,7 +215,35 @@
       <option name="project" value="LOCAL" />
       <updated>1655660031537</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Add capability to get old meals from canteens&#10;&#10;When requesting all meals, canteens/:id/meals is requested. That&#10;only returns meals from the day it was requested on and the future.&#10;However, old data can be interesting as well. With this commit, the&#10;meals from the previous week (seven days) are requested using&#10;the /canteens/:id/days/:day/meals endpoint. Additionally, the&#10;Canteen.getMeals function will now request meals for the specified&#10;date, if it is not included in the map returned by the default request.">
+      <created>1655683601231</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1655683601231</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Change meal emojis from map to list">
+      <created>1655729026999</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1655729026999</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Update meal embed description">
+      <created>1655729100241</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1655729100241</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Update canteen command auto completion">
+      <created>1655729217056</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1655729217056</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,19 +270,12 @@
     <MESSAGE value="Add command autocompletion capability" />
     <MESSAGE value="Add postgresql database" />
     <MESSAGE value="Add match scoring for meal/canteen search" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add match scoring for meal/canteen search" />
+    <MESSAGE value="Add capability to get old meals from canteens&#10;&#10;When requesting all meals, canteens/:id/meals is requested. That&#10;only returns meals from the day it was requested on and the future.&#10;However, old data can be interesting as well. With this commit, the&#10;meals from the previous week (seven days) are requested using&#10;the /canteens/:id/days/:day/meals endpoint. Additionally, the&#10;Canteen.getMeals function will now request meals for the specified&#10;date, if it is not included in the map returned by the default request." />
+    <MESSAGE value="Change meal emojis from map to list" />
+    <MESSAGE value="Update meal embed description" />
+    <MESSAGE value="Update canteen command auto completion" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update canteen command auto completion" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java</url>
-          <line>59</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

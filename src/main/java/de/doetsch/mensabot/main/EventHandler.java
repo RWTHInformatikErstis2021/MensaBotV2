@@ -19,7 +19,10 @@ public class EventHandler {
 		return Mono.when(
 				/* successfully logged in */
 				client.on(ReadyEvent.class, event -> Mono.fromRunnable(() -> logger.info("Logged in as {} ({})", event.getSelf().getTag(), event.getSelf().getId().asString())))
-		);
+		).onErrorResume(err -> {
+			logger.error("UNEXPECTED ERROR: missing error handler in one of the event handlers", err);
+			return Mono.empty();
+		});
 	}
 	
 }

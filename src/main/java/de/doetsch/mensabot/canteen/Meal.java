@@ -2,6 +2,8 @@ package de.doetsch.mensabot.canteen;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.doetsch.mensabot.canteen.deserializers.MealDeserializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.Objects;
 
 @JsonDeserialize(using = MealDeserializer.class)
 public record Meal(int id, String name, List<String> notes, String category, Map<String, Double> prices) {
+	private static final Logger logger = LogManager.getLogger(Meal.class);
+	
 	public double getStudentPrice(){
 		Double price = prices.get("students");
 		if(price != null) return price;

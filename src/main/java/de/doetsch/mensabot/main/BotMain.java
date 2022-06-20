@@ -19,11 +19,22 @@ public class BotMain {
 		logger.info("Program starting");
 		DiscordClient discordClient = DiscordClientBuilder.create(dotenv.get("DISCORD_BOT_TOKEN"))
 				.build();
-		DatabaseConfig.initializeDatabase().then(discordClient.withGateway(client -> Mono.when(
-				EventHandler.subscribe(client),
-				CommandHandler.register(client)
-		).then(client.onDisconnect()))).block();
-		
+		DatabaseConfig.initializeDatabase()
+				.flatMap(success -> {
+					if(!success){
+						logger.warn("Database failed to initialize, not starting bot");
+						return Mono.empty();
+					}
+					return discordClient.withGateway(client -> Mono.when(
+							EventHandler.subscribe(client),
+							CommandHandler.register(client)
+					).then(client.onDisconnect()));
+				})
+				.onErrorResume(err -> {
+					logger.error("UNEXPECTED ERROR: there is error handling missing somewhere", err);
+					return Mono.empty();
+				})
+				.block();
 		logger.info("Program exiting");
 	}
 	

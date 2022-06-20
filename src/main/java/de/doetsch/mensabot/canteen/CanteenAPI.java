@@ -42,12 +42,15 @@ public class CanteenAPI {
 	
 	private static Mono<Tuple2<List<Canteen>, Integer>> requestCanteenPage(int page){
 		return client.get().uri("/canteens/?page=" + page).responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).map(content -> {
+			if(response.status().code() < 200 || response.status().code() >= 300){
+				logger.warn("Canteens request responded with non 2XX status code {} with reason {}", response.status().code(), response.status().reasonPhrase());
+			}
 			int nextPage = -1;
 			try{
 				int totalPages = Integer.parseInt(response.responseHeaders().get("X-Total-Pages"));
 				if(page < totalPages) nextPage = page + 1;
 			}catch(NumberFormatException ex){
-				// TODO log
+				logger.error("Error while parsing X-Total-Pages in canteen request", ex);
 			}
 			try{
 				ObjectMapper mapper = new ObjectMapper();
@@ -55,7 +58,7 @@ public class CanteenAPI {
 				List<Canteen> canteens = List.of(mapper.convertValue(canteensNode, Canteen[].class));
 				return Tuples.of(canteens, nextPage);
 			}catch(JsonProcessingException ex){
-				// TODO log
+				logger.error("Error while trying to parse canteen request response", ex);
 				return Tuples.of(new ArrayList<>(), nextPage);
 			}
 		}));
@@ -63,6 +66,9 @@ public class CanteenAPI {
 	
 	public static Mono<Map<String, List<Meal>>> getMeals(int canteenId){
 		return client.get().uri("/canteens/" + canteenId + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {;
+			if(response.status().code() < 200 || response.status().code() >= 300){
+				logger.warn("Meals request responded with non 2XX status code {} with reason {}", response.status().code(), response.status().reasonPhrase());
+			}
 			Map<String, List<Meal>> days = new HashMap<>();
 			try{
 				ObjectMapper mapper = new ObjectMapper();
@@ -70,8 +76,8 @@ public class CanteenAPI {
 					List<Meal> rawMeals = List.of(mapper.convertValue(dayNode.get("meals"), Meal[].class));
 					days.put(dayNode.get("date").asText(), processMeals(rawMeals));
 				}
-			}catch(JsonProcessingException e){
-				// TODO log
+			}catch(JsonProcessingException ex){
+				logger.error("Error while trying to parse meals", ex);
 			}
 			return Mono.just(days);
 		}));
@@ -80,12 +86,15 @@ public class CanteenAPI {
 	public static Mono<List<Meal>> getMeals(int canteenId, String date){
 		return client.get().uri("/canteens/" + canteenId + "/days/" + date + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {
 			if(response.status().code() == 404) return Mono.empty();
+			if(response.status().code() < 200 || response.status().code() >= 300){
+				logger.warn("Meals request responded with non 2XX status code {} with reason {}", response.status().code(), response.status().reasonPhrase());
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			try{
 				List<Meal> rawMeals = List.of(mapper.convertValue(mapper.readTree(content), Meal[].class));
 				return Mono.just(processMeals(rawMeals));
-			}catch(JsonProcessingException e){
-				// TODO log
+			}catch(JsonProcessingException ex){
+				logger.error("Error while trying to parse meals", ex);
 				return Mono.just(new ArrayList<>());
 			}
 		}));

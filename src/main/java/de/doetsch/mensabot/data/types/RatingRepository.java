@@ -4,12 +4,16 @@ import de.doetsch.mensabot.data.DatabaseConfig;
 import io.r2dbc.spi.Result;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.BiFunction;
 
 public class RatingRepository {
+	
+	private static final Logger logger = LogManager.getLogger(RatingRepository.class);
 	
 	private static final BiFunction<Row, RowMetadata, Rating> MAPPING_FUNCTION = (row, rowMetadata) -> new Rating(row.get("userId", Long.class), row.get("meal", String.class), row.get("rating", Integer.class));
 	
@@ -19,7 +23,11 @@ public class RatingRepository {
 						.bind("meal", meal)
 						.execute()
 				)
-				.flatMap(result -> result.map(MAPPING_FUNCTION));
+				.flatMap(result -> result.map(MAPPING_FUNCTION))
+				.onErrorResume(err -> {
+					logger.error("Error while getting ratings for meal " + meal + " from database");
+					return Mono.empty();
+				});
 	}
 	
 	public Mono<Long> save(Rating rating){
@@ -31,7 +39,11 @@ public class RatingRepository {
 						.bind("rating", rating.getRating())
 						.execute()
 				)
-				.flatMap(Result::getRowsUpdated).next();
+				.flatMap(Result::getRowsUpdated).next()
+				.onErrorResume(err -> {
+					logger.error("Error while saving rating", err);
+					return Mono.empty();
+				});
 	}
 	
 }

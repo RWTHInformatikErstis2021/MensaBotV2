@@ -1,22 +1,25 @@
 package de.doetsch.mensabot.canteen.deserializers;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import de.doetsch.mensabot.canteen.Canteen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class CanteenDeserializer extends StdDeserializer<Canteen> {
+	private static final Logger logger = LogManager.getLogger(CanteenDeserializer.class);
+	
 	public CanteenDeserializer(){
 		super((Class<?>)null);
 	}
 	
 	@Override
-	public Canteen deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException{
+	public Canteen deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		JsonNode node = p.getCodec().readTree(p);
 		Canteen.Coordinates coordinates = null;
 		if(node.has("coordinates") && !node.get("coordinates").isNull()){

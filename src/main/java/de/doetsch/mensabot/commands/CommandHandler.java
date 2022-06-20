@@ -27,23 +27,48 @@ public class CommandHandler {
 					}
 					return commands;
 				}),
-				client.getApplicationInfo()
+				client.getApplicationInfo().onErrorResume(err -> {
+					logger.error("Error while getting application information", err);
+					return Mono.empty();
+				})
 		).flatMap(TupleUtils.function((commands, applicationInfo) -> Mono.when(
 				/* register commands */
 				Flux.fromIterable(commands.values())
 						.doOnNext(command -> commands.put(command.getCommand().name(), command))
-						.flatMap(command -> client.getRestClient().getApplicationService().createGuildApplicationCommand(applicationInfo.getId().asLong(), 518442628400939009L, command.getCommand())),
+						.flatMap(command -> client.getRestClient().getApplicationService()
+								.createGuildApplicationCommand(applicationInfo.getId().asLong(), 518442628400939009L, command.getCommand())
+								.onErrorResume(err -> {
+									logger.error("Error while registering command " + command.getCommand().name(), err);
+									return Mono.empty();
+								})
+						),
 				/* register chat command event */
 				client.on(ChatInputInteractionEvent.class, event -> {
 					Command command = commands.get(event.getCommandName());
-					if(command == null) return event.reply("Der Befehl konnte nicht gefunden werden.");
-					else return command.execute(event);
+					if(command == null) return event.reply("Der Befehl konnte nicht gefunden werden.")
+							.onErrorResume(err -> {
+								logger.error("Error while sending command not found message", err);
+								return Mono.empty();
+							});
+					else return command.execute(event)
+							.onErrorResume(err -> {
+								logger.error("Error while executing command " + event.getCommandName(), err);
+								return event.reply("Beim Ausführen des Befehls ist ein Fehler aufgetreten.")
+										.onErrorResume(err2 -> {
+											logger.error("Error while sending command execution error message", err2);
+											return Mono.empty();
+										});
+							});
 				}),
 				/* register auto completion */
 				client.on(ChatInputAutoCompleteEvent.class, event -> {
 					Command command = commands.get(event.getCommandName());
 					if(command == null) return Mono.empty();
-					else return command.autoComplete(event);
+					else return command.autoComplete(event)
+							.onErrorResume(err -> {
+								logger.error("Error while executing command auto completion for " + event.getCommandName());
+								return Mono.empty();
+							});
 				})
 		)));
 	}

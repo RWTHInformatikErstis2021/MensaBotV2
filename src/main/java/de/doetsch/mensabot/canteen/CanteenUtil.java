@@ -3,6 +3,8 @@ package de.doetsch.mensabot.canteen;
 import de.doetsch.mensabot.util.Util;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.function.TupleUtils;
@@ -17,6 +19,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CanteenUtil {
+	
+	private static final Logger logger = LogManager.getLogger(CanteenUtil.class);
 	
 	private static final List<Tuple2<String, String>> mealEmojis = List.of(
 			Tuples.of("schnitzel", "<:schnitzel:943559144135336047>"),
