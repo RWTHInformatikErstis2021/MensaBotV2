@@ -61,39 +61,57 @@ public class CanteenAPI {
 		}));
 	}
 	
-	public static Mono<Map<String, List<Meal>>> getMeals(int mensaId){
-		return client.get().uri("/canteens/" + mensaId + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {;
+	public static Mono<Map<String, List<Meal>>> getMeals(int canteenId){
+		return client.get().uri("/canteens/" + canteenId + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {;
 			Map<String, List<Meal>> days = new HashMap<>();
 			try{
 				ObjectMapper mapper = new ObjectMapper();
 				for(JsonNode dayNode : mapper.readTree(content)){
 					List<Meal> rawMeals = List.of(mapper.convertValue(dayNode.get("meals"), Meal[].class));
-					List<Meal> meals = new ArrayList<>();
-					for(Meal meal : rawMeals){
-						if(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage")){
-							if(meal.name().strip().endsWith(" oder")){
-								String newName = meal.name().strip();
-								newName = newName.substring(0, newName.length() - 5);
-								meals.add(new Meal(meal.id(), newName, meal.notes(), meal.category(), meal.prices()));
-							}else if(meal.name().contains(" oder ")){
-								String[] mealNames = meal.name().split(" oder ");
-								for(String mealName : mealNames){
-									meals.add(new Meal(meal.id(), mealName.strip(), meal.notes(), meal.category(), meal.prices()));
-								}
-							}else{
-								meals.add(meal);
-							}
-						}else{
-							meals.add(meal);
-						}
-					}
-					days.put(dayNode.get("date").asText(), meals);
+					days.put(dayNode.get("date").asText(), processMeals(rawMeals));
 				}
 			}catch(JsonProcessingException e){
 				// TODO log
 			}
 			return Mono.just(days);
 		}));
+	}
+	
+	public static Mono<List<Meal>> getMeals(int canteenId, String date){
+		return client.get().uri("/canteens/" + canteenId + "/days/" + date + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {
+			if(response.status().code() == 404) return Mono.empty();
+			ObjectMapper mapper = new ObjectMapper();
+			try{
+				List<Meal> rawMeals = List.of(mapper.convertValue(mapper.readTree(content), Meal[].class));
+				return Mono.just(processMeals(rawMeals));
+			}catch(JsonProcessingException e){
+				// TODO log
+				return Mono.just(new ArrayList<>());
+			}
+		}));
+	}
+	
+	private static List<Meal> processMeals(List<Meal> rawMeals){
+		List<Meal> meals = new ArrayList<>();
+		for(Meal meal : rawMeals){
+			if(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage")){
+				if(meal.name().strip().endsWith(" oder")){
+					String newName = meal.name().strip();
+					newName = newName.substring(0, newName.length() - 5);
+					meals.add(new Meal(meal.id(), newName, meal.notes(), meal.category(), meal.prices()));
+				}else if(meal.name().contains(" oder ")){
+					String[] mealNames = meal.name().split(" oder ");
+					for(String mealName : mealNames){
+						meals.add(new Meal(meal.id(), mealName.strip(), meal.notes(), meal.category(), meal.prices()));
+					}
+				}else{
+					meals.add(meal);
+				}
+			}else{
+				meals.add(meal);
+			}
+		}
+		return meals;
 	}
 	
 }
