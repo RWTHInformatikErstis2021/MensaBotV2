@@ -96,7 +96,7 @@ public class CanteenUtil {
 				)
 				.map(meals -> EmbedCreateSpec.builder()
 						.title("Gerichte in " + canteen.getName())
-						.description(Util.formatDate(date))
+						.description(Util.formatDayDifference(Util.dateToDayDifference(date)))
 						.addAllFields(meals.stream().map(TupleUtils.function((meal, rating) -> {
 							String mealTitle = getEmojiForMeal(meal) + " " + meal.name();
 							if(rating.isPresent()) mealTitle += " " + formatRating(rating.get());
