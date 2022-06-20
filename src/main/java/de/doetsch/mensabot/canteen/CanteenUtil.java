@@ -6,6 +6,7 @@ import discord4j.core.spec.EmbedCreateSpec;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.function.TupleUtils;
+import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 import java.time.Instant;
@@ -17,35 +18,35 @@ import java.util.stream.Collectors;
 
 public class CanteenUtil {
 	
-	private static final Map<String, String> mealEmojis = Map.ofEntries(
-			Map.entry("schnitzel", "<:schnitzel:943559144135336047>"),
-			Map.entry("burger", ":hamburger:"),
-			Map.entry("pizza", ":pizza:"),
-			Map.entry("pfannkuchen", ":pancakes:"),
-			Map.entry("kuchen", ":cake:"),
-			Map.entry("küchlein", ":cake:"),
-			Map.entry("spaghetti", ":spaghetti:"),
-			Map.entry("suppe", ":stew:"),
-			Map.entry("chili", ":hot_pepper:"),
-			Map.entry("scharf", ":hot_pepper:"),
-			Map.entry("keule", ":poultry_leg:"),
-			Map.entry("steak", ":cut_of_meat:"),
-			Map.entry("hähnchen", ":chicken:"),
-			Map.entry("huhn", ":chicken:"),
-			Map.entry("fisch", ":fish:"),
-			Map.entry("lachs", ":fish:"),
-			Map.entry("reis", ":rice:"),
-			Map.entry("pommes", ":fries:"),
-			Map.entry("apfel", ":apple:"),
-			Map.entry("brokkoli", ":broccoli:"),
-			Map.entry("paprika", ":bell_pepper:"),
-			Map.entry("mais", ":corn:"),
-			Map.entry("karotte", ":carrot:"),
-			Map.entry("kartoffel", ":potato:"),
-			Map.entry("salat", ":salad:"),
-			Map.entry("eintopf", ":stew:"),
-			Map.entry("käse", ":cheese:"),
-			Map.entry("zwiebel", ":onion:")
+	private static final List<Tuple2<String, String>> mealEmojis = List.of(
+			Tuples.of("schnitzel", "<:schnitzel:943559144135336047>"),
+			Tuples.of("burger", ":hamburger:"),
+			Tuples.of("pizza", ":pizza:"),
+			Tuples.of("pfannkuchen", ":pancakes:"),
+			Tuples.of("kuchen", ":cake:"),
+			Tuples.of("küchlein", ":cake:"),
+			Tuples.of("spaghetti", ":spaghetti:"),
+			Tuples.of("suppe", ":stew:"),
+			Tuples.of("keule", ":poultry_leg:"),
+			Tuples.of("steak", ":cut_of_meat:"),
+			Tuples.of("hähnchen", ":chicken:"),
+			Tuples.of("huhn", ":chicken:"),
+			Tuples.of("fisch", ":fish:"),
+			Tuples.of("lachs", ":fish:"),
+			Tuples.of("reis", ":rice:"),
+			Tuples.of("pommes", ":fries:"),
+			Tuples.of("apfel", ":apple:"),
+			Tuples.of("brokkoli", ":broccoli:"),
+			Tuples.of("paprika", ":bell_pepper:"),
+			Tuples.of("mais", ":corn:"),
+			Tuples.of("karotte", ":carrot:"),
+			Tuples.of("kartoffel", ":potato:"),
+			Tuples.of("salat", ":salad:"),
+			Tuples.of("eintopf", ":stew:"),
+			Tuples.of("käse", ":cheese:"),
+			Tuples.of("zwiebel", ":onion:"),
+			Tuples.of("chili", ":hot_pepper:"),
+			Tuples.of("scharf", ":hot_pepper:")
 	);
 	private static final Map<String, String> categoryEmojis = Map.ofEntries(
 			Map.entry("vegetarisch", ":leafy_green:"),
@@ -58,7 +59,7 @@ public class CanteenUtil {
 	public static String getEmojiForMeal(Meal meal){
 		String name = meal.name().toLowerCase();
 		String category = meal.category().toLowerCase();
-		return mealEmojis.entrySet().stream().filter(entry -> name.contains(entry.getKey())).map(Map.Entry::getValue).findFirst().orElseGet(()->
+		return mealEmojis.stream().filter(tuple -> name.contains(tuple.getT1())).map(Tuple2::getT2).findFirst().orElseGet(()->
 				categoryEmojis.entrySet().stream().filter(entry -> category.contains(entry.getKey())).map(Map.Entry::getValue).findFirst().orElse(":fork_knife_plate:")
 		);
 	}
