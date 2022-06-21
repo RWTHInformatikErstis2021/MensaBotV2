@@ -21,7 +21,8 @@ public class CommandHandler {
 				Mono.fromCallable(() -> {
 					Map<String, Command> commands = new HashMap<>();
 					for(Command command : new Command[]{
-							new MensaCommand()
+							new MensaCommand(),
+							new RateCommand()
 					}){
 						commands.put(command.getCommand().name(), command);
 					}

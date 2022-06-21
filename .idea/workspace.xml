@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Update canteen command auto completion">
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Update max meal name length to match discords value limit">
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Meal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/CanteenDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/CanteenDeserializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/MealDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/deserializers/MealDeserializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/main/BotMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +145,7 @@
       <workItem from="1655546320982" duration="17317000" />
       <workItem from="1655580223178" duration="214000" />
       <workItem from="1655580467474" duration="21489000" />
-      <workItem from="1655680335023" duration="10919000" />
+      <workItem from="1655680335023" duration="29535000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1655336619322</created>
@@ -243,7 +238,42 @@
       <option name="project" value="LOCAL" />
       <updated>1655729217056</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Add error handling/logging">
+      <created>1655734612773</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1655734612773</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fix DatabaseConfig.initializeDatabase bypass">
+      <created>1655761496617</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1655761496617</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Add more meal emojis">
+      <created>1655764853189</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1655764853189</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Update max meal name length to match discords value limit">
+      <created>1655772708319</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1655772708319</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Update max meal name length to match discords value limit">
+      <created>1655772946166</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1655772946166</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -274,7 +304,11 @@
     <MESSAGE value="Change meal emojis from map to list" />
     <MESSAGE value="Update meal embed description" />
     <MESSAGE value="Update canteen command auto completion" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update canteen command auto completion" />
+    <MESSAGE value="Add error handling/logging" />
+    <MESSAGE value="Fix DatabaseConfig.initializeDatabase bypass" />
+    <MESSAGE value="Add more meal emojis" />
+    <MESSAGE value="Update max meal name length to match discords value limit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update max meal name length to match discords value limit" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

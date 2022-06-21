@@ -68,4 +68,8 @@ public class Util {
 		});
 	}
 	
+	public static String trim(String text, int maxLength){
+		return text.length() <= maxLength ? text : text.substring(0, maxLength);
+	}
+	
 }
