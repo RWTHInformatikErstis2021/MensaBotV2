@@ -8,7 +8,7 @@ import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
-import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
@@ -65,7 +65,7 @@ public class MensaCommand extends Command {
 	
 	@Override
 	public Mono<Void> execute(ChatInputInteractionEvent event){
-		return event.getInteraction().getCommandInteraction().map(interaction -> {
+		return event.deferReply().then(event.getInteraction().getCommandInteraction().map(interaction -> {
 			int canteenId = interaction.getOption("mensa")
 					.flatMap(ApplicationCommandInteractionOption::getValue)
 					.map(value -> (int)value.asLong())
@@ -76,11 +76,11 @@ public class MensaCommand extends Command {
 					.orElse(0), ChronoUnit.DAYS);
 			return CanteenAPI.getCanteen(canteenId)
 					.flatMap(canteen -> CanteenUtil.getMealsEmbed(canteen, day))
-					.flatMap(embedSpec -> event.reply(InteractionApplicationCommandCallbackSpec.builder()
+					.flatMap(embedSpec -> event.editReply(InteractionReplyEditSpec.builder()
 							.addEmbed(embedSpec)
 							.build()
 					));
-		}).orElse(event.reply("Fehler beim Aufrufen des Befehls."));
+		}).orElse(event.editReply("Fehler beim Aufrufen des Befehls."))).then();
 	}
 	
 	@Override
