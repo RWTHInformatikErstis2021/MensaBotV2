@@ -67,39 +67,51 @@ public class RateCommand extends Command {
 				.map(entry -> Tuples.of(entry, Util.dateToDayDifference(entry.getKey())))
 				.filter(t -> t.getT2() <= 0)
 				.collectList()
-				.flatMap(days -> Mono.when(
-						event.editReply(InteractionReplyEditSpec.builder()
-								.contentOrNull("Von welchem Tag möchtest du ein Gericht bewerten?")
-								.addComponent(ActionRow.of(SelectMenu.of(
-										dateSelectId,
-										days.stream()
-												.sorted(Comparator.comparing(tuple -> tuple.getT1().getKey()))
-												.map(tuple -> SelectMenu.Option.of(tuple.getT1().getKey() + " (" + Util.formatDayDifference(tuple.getT2()) + ")", tuple.getT1().getKey()))
-												.collect(Collectors.toList())
-								)))
-								.build()
-						).onErrorResume(err -> {
-							logger.error("Error while editing date select message", err);
-							return Mono.empty();
-						}),
-						event.getClient().on(SelectMenuInteractionEvent.class)
-								.filter(newEvent -> newEvent.getCustomId().equals(dateSelectId))
-								.next().take(Duration.ofMinutes(10))
-								.flatMap(newEvent -> handleDateSelect(newEvent, days))
-								.onErrorResume(err -> {
-									logger.error("Error in date select handler", err);
-									return Mono.empty();
-								})
-				)));
+				.flatMap(days -> {
+					if(days.isEmpty()) return event.reply("Diese Mensa hatte kürzlich nicht geöffnet.").withEphemeral(true)
+							.onErrorResume(err -> {
+								logger.error("Error while responding to event", err);
+								return Mono.empty();
+							});
+					return Mono.when(
+							event.editReply(InteractionReplyEditSpec.builder()
+									.contentOrNull("Von welchem Tag möchtest du ein Gericht bewerten?")
+									.addComponent(ActionRow.of(SelectMenu.of(
+											dateSelectId,
+											days.stream()
+													.sorted(Comparator.comparing(tuple -> tuple.getT1().getKey()))
+													.map(tuple -> SelectMenu.Option.of(tuple.getT1().getKey() + " (" + Util.formatDayDifference(tuple.getT2()) + ")", tuple.getT1().getKey()))
+													.collect(Collectors.toList())
+									)))
+									.build()
+							).onErrorResume(err -> {
+								logger.error("Error while editing date select message", err);
+								return Mono.empty();
+							}),
+							event.getClient().on(SelectMenuInteractionEvent.class)
+									.filter(newEvent -> newEvent.getCustomId().equals(dateSelectId))
+									.next().take(Duration.ofMinutes(10))
+									.flatMap(newEvent -> handleDateSelect(newEvent, days))
+									.onErrorResume(err -> {
+										logger.error("Error in date select handler", err);
+										return Mono.empty();
+									})
+					);
+				}));
 	}
 	
-	private Mono<Boolean> handleDateSelect(SelectMenuInteractionEvent event, List<Tuple2<Map.Entry<String, List<Meal>>, Integer>> days){
+	private Mono<Void> handleDateSelect(SelectMenuInteractionEvent event, List<Tuple2<Map.Entry<String, List<Meal>>, Integer>> days){
 		String date = event.getValues().get(0);
 		List<Meal> meals = days.stream()
 				.map(Tuple2::getT1)
 				.filter(entry -> entry.getKey().equals(date))
 				.map(Map.Entry::getValue)
 				.findAny().orElse(List.of());
+		if(meals.isEmpty()) return event.reply("An diesem Tag gab es keine Gerichte in der Mensa.").withEphemeral(true)
+				.onErrorResume(err -> {
+					logger.error("Error while responding to event", err);
+					return Mono.empty();
+				});
 		String mealSelectId = UUID.randomUUID().toString();
 		return event.deferReply().withEphemeral(true).then(Mono.when(
 				event.editReply(InteractionReplyEditSpec.builder()
@@ -121,10 +133,10 @@ public class RateCommand extends Command {
 							logger.error("Error in meal select handler", err);
 							return Mono.empty();
 						})
-		)).thenReturn(true);
+		));
 	}
 	
-	private Mono<Boolean> handleMealSelect(SelectMenuInteractionEvent event, List<Meal> meals){
+	private Mono<Void> handleMealSelect(SelectMenuInteractionEvent event, List<Meal> meals){
 		String meal = event.getValues().get(0);
 		// discord actually verifies select menus on their side
 		//if(meals.stream().noneMatch(m -> Util.trim(m.name(), 100).equals(meal))) return Mono.empty();
@@ -152,10 +164,10 @@ public class RateCommand extends Command {
 							logger.error("Error in button click handler", err);
 							return Mono.empty();
 						})
-		)).thenReturn(true);
+		));
 	}
 	
-	private Mono<Boolean> handleRatingClick(ButtonInteractionEvent event, String buttonBaseId, String meal){
+	private Mono<Void> handleRatingClick(ButtonInteractionEvent event, String buttonBaseId, String meal){
 		int rating = switch(event.getCustomId().substring(buttonBaseId.length())){
 			case "1" -> 1;
 			case "2" -> 2;
@@ -181,11 +193,10 @@ public class RateCommand extends Command {
 						.contentOrNull(meal + " wurde mit " + ":star:".repeat(rating) + " bewertet.")
 						.build()
 				))
-				.thenReturn(true)
 				.onErrorResume(err -> {
 					logger.error("Error while responding to created rating");
 					return Mono.empty();
-				});
+				}).then();
 	}
 	
 	@Override
