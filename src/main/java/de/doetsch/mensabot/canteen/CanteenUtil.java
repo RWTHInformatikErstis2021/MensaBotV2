@@ -49,6 +49,7 @@ public class CanteenUtil {
 			Tuples.of("paprika", ":bell_pepper:"),
 			Tuples.of("mais", ":corn:"),
 			Tuples.of("karotte", ":carrot:"),
+			Tuples.of("möhrchen", ":carrot:"),
 			Tuples.of("kartoffel", ":potato:"),
 			Tuples.of("salat", ":salad:"),
 			Tuples.of("eintopf", ":stew:"),
