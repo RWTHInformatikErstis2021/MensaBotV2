@@ -25,19 +25,19 @@ public class CanteenAPI {
 	
 	private static final HttpClient client = HttpClient.create().baseUrl("https://openmensa.org/api/v2");
 	
-	private static final Mono<List<Canteen>> canteensMono = requestCanteenPage(1).expand(TupleUtils.function((canteens, nextPage) -> {
+	private static final Mono<Map<Integer, Canteen>> canteensMono = requestCanteenPage(1).expand(TupleUtils.function((canteens, nextPage) -> {
 		if(nextPage < 0) return Mono.empty();
 		else return requestCanteenPage(nextPage);
 	})).map(Tuple2::getT1).collectList().map(lists -> {
-		List<Canteen> list = new ArrayList<>();
-		for(List<Canteen> l : lists) list.addAll(l);
-		return list;
+		Map<Integer, Canteen> map = new HashMap<>();
+		for(List<Canteen> l : lists) for(Canteen c : l) map.put(c.getId(), c);
+		return map;
 	}).cache(Duration.ofHours(24));
-	public static Mono<List<Canteen>> getCanteens(){
+	public static Mono<Map<Integer, Canteen>> getCanteens(){
 		return canteensMono;
 	}
 	public static Mono<Canteen> getCanteen(int id){
-		return getCanteens().flatMap(l -> Mono.justOrEmpty(l.stream().filter(m -> m.getId() == id).findAny()));
+		return getCanteens().flatMap(map -> Mono.justOrEmpty(map.get(id)));
 	}
 	
 	private static Mono<Tuple2<List<Canteen>, Integer>> requestCanteenPage(int page){

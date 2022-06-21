@@ -206,7 +206,7 @@ public class RateCommand extends Command {
 					.map(ApplicationCommandInteractionOptionValue::getRaw)
 					.orElse("");
 			return CanteenAPI.getCanteens()
-					.flatMapIterable(m->m)
+					.flatMapIterable(Map::values)
 					.map(canteen -> Tuples.of(canteen, CanteenUtil.scoreCanteenSearchMatch(canteen, input)))
 					.sort(Comparator.comparingDouble(tuple -> -tuple.getT2()))
 					.take(25)
