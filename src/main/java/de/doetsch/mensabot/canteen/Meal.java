@@ -2,6 +2,7 @@ package de.doetsch.mensabot.canteen;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.doetsch.mensabot.canteen.deserializers.MealDeserializer;
+import de.doetsch.mensabot.data.types.RatingRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
@@ -26,16 +27,18 @@ public record Meal(int id, String name, List<String> notes, String category, Map
 	}
 	
 	public Mono<Rating> getRating(){
-		// TODO implement
-		return Mono.empty();
+		return RatingRepository.findByMeal(name).flatMap(ratings -> {
+			if(ratings.isEmpty()) return Mono.empty();
+			return Mono.just(new Rating(ratings));
+		});
 	}
 	
 	public static class Rating {
 		private final double rating;
 		private final int ratingCount;
-		public Rating(List<Integer> ratings){
+		public Rating(List<de.doetsch.mensabot.data.types.Rating> ratings){
 			ratingCount = ratings.size();
-			rating = ratings.stream().mapToInt(x->x).average().orElse(0d);
+			rating = ratings.stream().mapToInt(de.doetsch.mensabot.data.types.Rating::getRating).average().orElse(0d);
 		}
 		public double getRating(){return rating;}
 		public int getRatingCount(){return ratingCount;}

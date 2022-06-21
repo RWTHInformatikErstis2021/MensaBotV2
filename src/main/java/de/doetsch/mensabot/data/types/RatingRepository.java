@@ -7,9 +7,9 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 public class RatingRepository {
@@ -18,8 +18,8 @@ public class RatingRepository {
 	
 	private static final BiFunction<Row, RowMetadata, Rating> MAPPING_FUNCTION = (row, rowMetadata) -> new Rating(row.get("userId", Long.class), row.get("meal", String.class), row.get("rating", Integer.class));
 	
-	public static Flux<Rating> findByMeal(String meal){
-		if(true) return Flux.empty(); // TODO just set up a damn database and remove this shit
+	public static Mono<List<Rating>> findByMeal(String meal){
+		if(true) return Mono.just(List.of()); // TODO just set up a damn database and remove this shit
 		// discord only allows select menu option values to be 100 characters long
 		// meaning they are trimmed to 100 characters if longer
 		String mealTrimmed = Util.trim(meal, 100);
@@ -32,7 +32,8 @@ public class RatingRepository {
 				.onErrorResume(err -> {
 					logger.error("Error while getting ratings for meal " + meal + " from database");
 					return Mono.empty();
-				});
+				})
+				.collectList();
 	}
 	
 	public static Mono<Long> save(Rating rating){
