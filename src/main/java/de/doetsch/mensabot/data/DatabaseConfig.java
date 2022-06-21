@@ -31,7 +31,7 @@ public class DatabaseConfig {
 		return getConnection().flatMapMany(connection -> connection.createStatement(
 				"CREATE TABLE IF NOT EXISTS ratings (\n" +
 						"    userId BIGINT,\n" +
-						"    meal VARCHAR(200),\n" +
+						"    meal VARCHAR(100),\n" +
 						"    rating INTEGER,\n" +
 						"    PRIMARY KEY (userId, meal)\n" +
 						");"
