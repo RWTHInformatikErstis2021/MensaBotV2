@@ -16,6 +16,7 @@ public class DatabaseConfig {
 	private static final Dotenv dotenv = Dotenv.load();
 	private static final ConnectionFactory connectionFactory = new PostgresqlConnectionFactory(PostgresqlConnectionConfiguration.builder()
 			.host(dotenv.get("DATABASE_HOST"))
+			.port(Integer.parseInt(dotenv.get("DATABASE_PORT")))
 			.database(dotenv.get("DATABASE_NAME"))
 			.username(dotenv.get("DATABASE_USERNAME"))
 			.password(dotenv.get("DATABASE_PASSWORD"))
