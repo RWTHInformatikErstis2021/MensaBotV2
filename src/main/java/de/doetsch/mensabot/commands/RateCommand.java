@@ -35,7 +35,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class RateCommand extends Command {
-	private static final Logger logger = LogManager.getLogger(MensaCommand.class);
+	private static final Logger logger = LogManager.getLogger(RateCommand.class);
 	
 	private final ApplicationCommandRequest command = ApplicationCommandRequest.builder()
 			.name("rate")
@@ -188,13 +188,14 @@ public class RateCommand extends Command {
 							})
 							.then(Mono.empty());
 				})
-				.then(event.editReply(InteractionReplyEditSpec.builder()
+				.flatMap(ignored -> event.editReply(InteractionReplyEditSpec.builder()
 						.allowedMentionsOrNull(AllowedMentions.suppressAll())
 						.contentOrNull(meal + " wurde mit " + ":star:".repeat(rating) + " bewertet.")
 						.build()
 				))
+				.switchIfEmpty(event.editReply("Beim Bewerten des Gerichts ist ein Fehler aufgetreten."))
 				.onErrorResume(err -> {
-					logger.error("Error while responding to created rating");
+					logger.error("Error while responding to created rating", err);
 					return Mono.empty();
 				}).then();
 	}
