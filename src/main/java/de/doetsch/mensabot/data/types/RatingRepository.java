@@ -33,7 +33,7 @@ public class RatingRepository {
 				.collectList();
 	}
 	
-	public static Mono<Long> save(Rating rating){
+	public static Mono<Integer> save(Rating rating){
 		return DatabaseConfig.getConnection()
 				.flatMapMany(connection -> connection.createStatement("INSERT INTO ratings (userId, meal, rating) VALUES ($1, $2, $3)" +
 								" ON CONFLICT (userId, meal) DO UPDATE SET rating=$3")
@@ -42,7 +42,12 @@ public class RatingRepository {
 						.bind("$3", rating.getRating())
 						.execute()
 				)
-				.flatMap(Result::getRowsUpdated).next()
+				.flatMap(Result::getRowsUpdated).cast(Object.class).flatMap(o -> {
+					// wtf why is it returning a Mono<Long> that actually contains an Integer??
+					if(o instanceof Integer) return Mono.just((int)o);
+					else if(o instanceof Long) return Mono.just((int)(long)o);
+					else return Mono.just(-1);
+				}).next()
 				.onErrorResume(err -> {
 					logger.error("Error while saving rating", err);
 					return Mono.empty();
