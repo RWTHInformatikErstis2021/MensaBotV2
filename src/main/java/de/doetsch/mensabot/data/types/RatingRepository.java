@@ -19,13 +19,10 @@ public class RatingRepository {
 	private static final BiFunction<Row, RowMetadata, Rating> MAPPING_FUNCTION = (row, rowMetadata) -> new Rating(row.get("userId", Long.class), row.get("meal", String.class), row.get("rating", Integer.class));
 	
 	public static Mono<List<Rating>> findByMeal(String meal){
-		if(true) return Mono.just(List.of()); // TODO just set up a damn database and remove this shit
-		// discord only allows select menu option values to be 100 characters long
-		// meaning they are trimmed to 100 characters if longer
 		String mealTrimmed = Util.trim(meal, 100);
 		return DatabaseConfig.getConnection()
-				.flatMapMany(connection -> connection.createStatement("SELECT * FROM ratings WHERE meal=:meal")
-						.bind("meal", mealTrimmed)
+				.flatMapMany(connection -> connection.createStatement("SELECT * FROM ratings WHERE meal=$1")
+						.bind("$1", mealTrimmed)
 						.execute()
 				)
 				.flatMap(result -> result.map(MAPPING_FUNCTION))
@@ -37,13 +34,12 @@ public class RatingRepository {
 	}
 	
 	public static Mono<Long> save(Rating rating){
-		if(true) return Mono.just(1L); // TODO like fr it isnt that hard
 		return DatabaseConfig.getConnection()
-				.flatMapMany(connection -> connection.createStatement("INSERT INTO ratings (userId, meal, rating) VALUES (:userId, :meal, :rating)" +
-								" ON CONFLICT DO UPDATE SET rating=:rating")
-						.bind("userId", rating.getUserId())
-						.bind("meal", rating.getMeal())
-						.bind("rating", rating.getRating())
+				.flatMapMany(connection -> connection.createStatement("INSERT INTO ratings (userId, meal, rating) VALUES ($1, $2, $3)" +
+								" ON CONFLICT (userId, meal) DO UPDATE SET rating=$3")
+						.bind("$1", rating.getUserId())
+						.bind("$2", rating.getMeal())
+						.bind("$3", rating.getRating())
 						.execute()
 				)
 				.flatMap(Result::getRowsUpdated).next()
