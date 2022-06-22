@@ -3,6 +3,7 @@ package de.doetsch.mensabot.data;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+import io.r2dbc.postgresql.client.SSLMode;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,8 @@ public class DatabaseConfig {
 			.database(dotenv.get("DATABASE_NAME"))
 			.username(dotenv.get("DATABASE_USERNAME"))
 			.password(dotenv.get("DATABASE_PASSWORD"))
+			.enableSsl()
+			.sslMode(SSLMode.REQUIRE)
 			.build()
 	);
 	public static Mono<Connection> getConnection(){
@@ -27,8 +30,6 @@ public class DatabaseConfig {
 	}
 	
 	public static Mono<Boolean> initializeDatabase(){
-		if(true) return Mono.just(true); // TODO remove
-		// (i currently dont have postgresql set up on my machine and am lazy to set it up rn)
 		return getConnection().flatMapMany(connection -> connection.createStatement(
 				"CREATE TABLE IF NOT EXISTS ratings (\n" +
 						"    userId BIGINT,\n" +
