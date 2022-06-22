@@ -1,0 +1,16 @@
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+    <Appenders>
+        <Console name="console" target="info">
+            <PatternLayout pattern="[%level{WARN= WARN, DEBUG=DEBUG, ERROR=ERROR, TRACE=TRACE, INFO= INFO}] [%d{DEFAULT}] [%c] %ex" />
+        </Console>
+        <File name="logfile" filename="all.log" immediateFlush="false" append="true">
+            <PatternLayout pattern="[%level{WARN= WARN, DEBUG=DEBUG, ERROR=ERROR, TRACE=TRACE, INFO= INFO}] [%d{DEFAULT}] [%c] %ex" />
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root>
+            <AppenderRef ref="console" />
+            <AppenderRef ref="logfile" />
+        </Root>
+    </Loggers>
+</Configuration>
