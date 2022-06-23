@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalUnit;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Util {
@@ -18,6 +19,11 @@ public class Util {
 	public static String formatDate(Instant instant){
 		ZonedDateTime date = instant.atZone(timezone);
 		return pad(date.getYear(), 4) + "-" + pad(date.getMonthValue(), 2) + "-" + pad(date.getDayOfMonth(), 2);
+	}
+	
+	public static String formatHumanReadableDate(Instant instant){
+		ZonedDateTime date = instant.atZone(timezone);
+		return date.format(DateTimeFormatter.ofPattern("EEEE, dd.MM.yyyy", Locale.GERMAN));
 	}
 	
 	public static int dateToDayDifference(String date){

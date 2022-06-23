@@ -28,6 +28,8 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +82,10 @@ public class RateCommand extends Command {
 											dateSelectId,
 											days.stream()
 													.sorted(Comparator.comparing(tuple -> tuple.getT1().getKey()))
-													.map(tuple -> SelectMenu.Option.of(tuple.getT1().getKey() + " (" + Util.formatDayDifference(tuple.getT2()) + ")", tuple.getT1().getKey()))
+													.map(tuple -> {
+														Instant date = Instant.now().plus(tuple.getT2(), ChronoUnit.DAYS);
+														return SelectMenu.Option.of(Util.formatHumanReadableDate(date) + " (" + Util.formatDayDifference(tuple.getT2()) + ")", tuple.getT1().getKey());
+													})
 													.collect(Collectors.toList())
 									)))
 									.build()

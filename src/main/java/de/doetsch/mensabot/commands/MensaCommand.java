@@ -88,7 +88,8 @@ public class MensaCommand extends Command {
 		if(event.getFocusedOption().getName().equals("tag")){
 			String input = event.getFocusedOption().getValue()
 					.map(ApplicationCommandInteractionOptionValue::getRaw)
-					.orElse("");
+					.orElse("")
+					.toLowerCase();
 			int canteenId = event.getOption("canteen")
 					.flatMap(ApplicationCommandInteractionOption::getValue)
 					.map(value -> (int)value.asLong())
@@ -102,9 +103,13 @@ public class MensaCommand extends Command {
 					.flatMap(Canteen::getMeals)
 					.flatMapIterable(Map::keySet)
 					.sort()
-					.map(date -> Map.entry(date, Util.dateToDayDifference(date)))
+					.map(date -> {
+						int diff = Util.dateToDayDifference(date);
+						Instant d = Instant.now().plus(diff, ChronoUnit.DAYS);
+						return Map.entry(Util.formatHumanReadableDate(d), diff);
+					})
 					.mergeWith(Flux.fromIterable(dates.entrySet()))
-					.filter(entry -> entry.getKey().startsWith(input))
+					.filter(entry -> entry.getKey().toLowerCase().contains(input))
 					.take(25)
 					.map(entry -> ApplicationCommandOptionChoiceData.builder()
 							.name(entry.getKey())
