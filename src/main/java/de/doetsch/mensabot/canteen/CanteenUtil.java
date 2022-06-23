@@ -3,6 +3,7 @@ package de.doetsch.mensabot.canteen;
 import de.doetsch.mensabot.util.Util;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
@@ -12,6 +13,7 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -131,6 +133,18 @@ public class CanteenUtil {
 				);
 	}
 	
+	public static Mono<List<ApplicationCommandOptionChoiceData>> getCanteenAutoCompleteOptions(String search){
+		return CanteenAPI.getCanteens()
+				.flatMapIterable(Map::values)
+				.map(canteen -> Tuples.of(canteen, CanteenUtil.scoreCanteenSearchMatch(canteen, search)))
+				.sort(Comparator.comparingDouble(tuple -> -tuple.getT2()))
+				.take(25)
+				.filter(tuple -> tuple.getT2() > 0.3)
+				.map(Tuple2::getT1)
+				.map(canteen -> (ApplicationCommandOptionChoiceData)ApplicationCommandOptionChoiceData.builder().name(canteen.getName()).value(canteen.getId()).build())
+				.collectList();
+	}
+	
 	public static double scoreCanteenSearchMatch(Canteen canteen, String search){
 		String canteenName = canteen.getName().toLowerCase();
 		String canteenCity = canteen.getCity().toLowerCase();
@@ -145,6 +159,7 @@ public class CanteenUtil {
 	
 	private static final Pattern whitespace = Pattern.compile(" ");
 	private static double scoreSearchMatch(String search, String name, String secondary){
+		if(search.equals("")) return 0;
 		if(name.equals(search)) return 1;
 		String[] searchParts = whitespace.split(search);
 		List<String> nameParts = List.of(whitespace.split(name));

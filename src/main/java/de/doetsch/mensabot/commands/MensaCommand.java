@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MensaCommand extends Command {
 	
@@ -39,14 +37,7 @@ public class MensaCommand extends Command {
 							.description("Die Mensa, von welcher der Speiseplan ausgegeben werden soll")
 							.type(4)
 							.required(false)
-							.choices(Stream.of(Canteen.DefaultCanteen.values())
-									.map(canteen -> ApplicationCommandOptionChoiceData.builder()
-											.name(canteen.getDisplayName())
-											.value(canteen.getId())
-											.build()
-									)
-									.collect(Collectors.toList())
-							)
+							.autocomplete(true)
 							.build(),
 					ApplicationCommandOptionData.builder()
 							.name("tag")
@@ -118,6 +109,12 @@ public class MensaCommand extends Command {
 					)
 					.collectList()
 					.flatMap(options -> event.respondWithSuggestions(new ArrayList<>(options)));
+		}else if(event.getFocusedOption().getName().equals("mensa")){
+			String input = event.getFocusedOption().getValue()
+					.map(ApplicationCommandInteractionOptionValue::getRaw)
+					.orElse("");
+			return CanteenUtil.getCanteenAutoCompleteOptions(input)
+					.flatMap(event::respondWithSuggestions);
 		}
 		return Mono.empty();
 	}

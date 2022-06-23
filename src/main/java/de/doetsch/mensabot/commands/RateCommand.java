@@ -17,7 +17,6 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.spec.InteractionReplyEditSpec;
-import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.util.AllowedMentions;
@@ -211,15 +210,7 @@ public class RateCommand extends Command {
 			String input = event.getFocusedOption().getValue()
 					.map(ApplicationCommandInteractionOptionValue::getRaw)
 					.orElse("");
-			return CanteenAPI.getCanteens()
-					.flatMapIterable(Map::values)
-					.map(canteen -> Tuples.of(canteen, CanteenUtil.scoreCanteenSearchMatch(canteen, input)))
-					.sort(Comparator.comparingDouble(tuple -> -tuple.getT2()))
-					.take(25)
-					.filter(tuple -> tuple.getT2() > 0.3)
-					.map(Tuple2::getT1)
-					.map(canteen -> (ApplicationCommandOptionChoiceData)ApplicationCommandOptionChoiceData.builder().name(canteen.getName()).value(canteen.getId()).build())
-					.collectList()
+			return CanteenUtil.getCanteenAutoCompleteOptions(input)
 					.flatMap(event::respondWithSuggestions);
 		}
 		return Mono.empty();
