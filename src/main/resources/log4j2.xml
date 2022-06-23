@@ -1,10 +1,10 @@
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%-5p] [%d{DEFAULT}] [%c] %m%n%ex%n" />
+            <PatternLayout pattern="[%-5p] [%d{DEFAULT}] [%c] %m%n%ex" />
         </Console>
         <RollingFile name="logfile" fileName="logs/bot.log" filePattern="logs/%d{yyyy-MM-dd}.log.gz">
-            <PatternLayout pattern="[%-5p] [%d{DEFAULT}] [%c] %m%n%ex%n" />
+            <PatternLayout pattern="[%-5p] [%d{DEFAULT}] [%c] %m%n%ex" />
             <TimeBasedTriggeringPolicy />
         </RollingFile>
     </Appenders>
