@@ -69,11 +69,11 @@ public class RateCommand extends Command {
 				.filter(t -> t.getT2() <= 0)
 				.collectList()
 				.flatMap(days -> {
-					if(days.isEmpty()) return event.reply("Diese Mensa hatte kürzlich nicht geöffnet.").withEphemeral(true)
+					if(days.isEmpty()) return event.editReply("Diese Mensa hatte kürzlich nicht geöffnet.")
 							.onErrorResume(err -> {
 								logger.error("Error while responding to event", err);
 								return Mono.empty();
-							});
+							}).then();
 					return Mono.when(
 							event.editReply(InteractionReplyEditSpec.builder()
 									.contentOrNull("Von welchem Tag möchtest du ein Gericht bewerten?")
