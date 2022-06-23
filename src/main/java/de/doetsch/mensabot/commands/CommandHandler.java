@@ -67,7 +67,7 @@ public class CommandHandler {
 					if(command == null) return Mono.empty();
 					else return command.autoComplete(event)
 							.onErrorResume(err -> {
-								logger.error("Error while executing command auto completion for " + event.getCommandName());
+								logger.error("Error while executing command auto completion for " + event.getCommandName(), err);
 								return Mono.empty();
 							});
 				})
