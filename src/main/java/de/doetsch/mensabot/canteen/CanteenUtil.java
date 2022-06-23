@@ -159,8 +159,7 @@ public class CanteenUtil {
 	
 	private static final Pattern whitespace = Pattern.compile(" ");
 	private static double scoreSearchMatch(String search, String name, String secondary){
-		if(search.equals("")) return 0;
-		if(name.equals(search)) return 1;
+		if(search.equals("") || name.equals(search)) return 1;
 		String[] searchParts = whitespace.split(search);
 		List<String> nameParts = List.of(whitespace.split(name));
 		double score = 0;
