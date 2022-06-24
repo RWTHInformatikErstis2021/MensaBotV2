@@ -93,7 +93,7 @@ public class CanteenUtil {
 	public static String formatRating(Meal.Rating rating){
 		int full = (int)rating.getRating();
 		double remaining = rating.getRating() - full;
-		return ":star:".repeat(full) + ratingEmojis.stream().filter(entry -> remaining >= entry.getKey()).findFirst().map(Map.Entry::getValue).orElse("") + "(" + rating.getRatingCount() + ")";
+		return ":star:".repeat(full) + ratingEmojis.stream().filter(entry -> remaining >= entry.getKey()).findFirst().map(Map.Entry::getValue).orElse("") + " (" + rating.getRatingCount() + ")";
 	}
 	
 	public static String formatPrice(double price){
