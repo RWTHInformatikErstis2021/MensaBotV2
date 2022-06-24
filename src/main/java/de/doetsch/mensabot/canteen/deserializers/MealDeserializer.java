@@ -28,6 +28,6 @@ public class MealDeserializer extends StdDeserializer<Meal> {
 			Map.Entry<String, JsonNode> entry = it.next();
 			prices.put(entry.getKey(), entry.getValue().asDouble());
 		}
-		return new Meal(node.get("id").asInt(), node.get("name").asText(), notes, node.get("category").asText(), prices);
+		return new Meal(null, node.get("id").asInt(), node.get("name").asText(), notes, node.get("category").asText(), prices);
 	}
 }

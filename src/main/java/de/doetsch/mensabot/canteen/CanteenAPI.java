@@ -65,7 +65,7 @@ public class CanteenAPI {
 	}
 	
 	public static Mono<Map<String, List<Meal>>> getMeals(int canteenId){
-		return client.get().uri("/canteens/" + canteenId + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {;
+		return getCanteen(canteenId).flatMap(canteen -> client.get().uri("/canteens/" + canteenId + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {
 			if(response.status().code() < 200 || response.status().code() >= 300){
 				logger.warn("Meals request responded with non 2XX status code {} with reason {}", response.status().code(), response.status().reasonPhrase());
 			}
@@ -74,17 +74,17 @@ public class CanteenAPI {
 				ObjectMapper mapper = new ObjectMapper();
 				for(JsonNode dayNode : mapper.readTree(content)){
 					List<Meal> rawMeals = List.of(mapper.convertValue(dayNode.get("meals"), Meal[].class));
-					days.put(dayNode.get("date").asText(), processMeals(rawMeals));
+					days.put(dayNode.get("date").asText(), processMeals(canteen, rawMeals));
 				}
 			}catch(JsonProcessingException ex){
 				logger.error("Error while trying to parse meals", ex);
 			}
 			return Mono.just(days);
-		}));
+		})));
 	}
 	
 	public static Mono<List<Meal>> getMeals(int canteenId, String date){
-		return client.get().uri("/canteens/" + canteenId + "/days/" + date + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {
+		return getCanteen(canteenId).flatMap(canteen -> client.get().uri("/canteens/" + canteenId + "/days/" + date + "/meals").responseSingle((response, rawBody) -> rawBody.asString(StandardCharsets.UTF_8).flatMap(content -> {
 			if(response.status().code() == 404) return Mono.empty();
 			if(response.status().code() < 200 || response.status().code() >= 300){
 				logger.warn("Meals request responded with non 2XX status code {} with reason {}", response.status().code(), response.status().reasonPhrase());
@@ -92,32 +92,32 @@ public class CanteenAPI {
 			ObjectMapper mapper = new ObjectMapper();
 			try{
 				List<Meal> rawMeals = List.of(mapper.convertValue(mapper.readTree(content), Meal[].class));
-				return Mono.just(processMeals(rawMeals));
+				return Mono.just(processMeals(canteen, rawMeals));
 			}catch(JsonProcessingException ex){
 				logger.error("Error while trying to parse meals", ex);
 				return Mono.just(new ArrayList<>());
 			}
-		}));
+		})));
 	}
 	
-	private static List<Meal> processMeals(List<Meal> rawMeals){
+	private static List<Meal> processMeals(Canteen canteen, List<Meal> rawMeals){
 		List<Meal> meals = new ArrayList<>();
 		for(Meal meal : rawMeals){
-			if(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage")){
-				if(meal.name().strip().endsWith(" oder")){
-					String newName = meal.name().strip();
+			if(meal.getCategory().equalsIgnoreCase("hauptbeilagen") || meal.getCategory().equalsIgnoreCase("nebenbeilage")){
+				if(meal.getName().strip().endsWith(" oder")){
+					String newName = meal.getName().strip();
 					newName = newName.substring(0, newName.length() - 5);
-					meals.add(new Meal(meal.id(), newName, meal.notes(), meal.category(), meal.prices()));
-				}else if(meal.name().contains(" oder ")){
-					String[] mealNames = meal.name().split(" oder ");
+					meals.add(new Meal(canteen, meal.getId(), newName, meal.getNotes(), meal.getCategory(), meal.getPrices()));
+				}else if(meal.getName().contains(" oder ")){
+					String[] mealNames = meal.getName().split(" oder ");
 					for(String mealName : mealNames){
-						meals.add(new Meal(meal.id(), mealName.strip(), meal.notes(), meal.category(), meal.prices()));
+						meals.add(new Meal(canteen, meal.getId(), mealName.strip(), meal.getNotes(), meal.getCategory(), meal.getPrices()));
 					}
 				}else{
-					meals.add(meal);
+					meals.add(meal.withCanteen(canteen));
 				}
 			}else{
-				meals.add(meal);
+				meals.add(meal.withCanteen(canteen));
 			}
 		}
 		return meals;

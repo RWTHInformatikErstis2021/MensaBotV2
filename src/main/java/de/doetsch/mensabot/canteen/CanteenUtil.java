@@ -72,8 +72,8 @@ public class CanteenUtil {
 			Map.entry("nebenbeilagen", ":salad:")
 	);
 	public static String getEmojiForMeal(Meal meal){
-		String name = meal.name().toLowerCase();
-		String category = meal.category().toLowerCase();
+		String name = meal.getName().toLowerCase();
+		String category = meal.getCategory().toLowerCase();
 		return mealEmojis.stream().filter(tuple -> name.contains(tuple.getT1())).map(Tuple2::getT2).findFirst().orElseGet(()->
 				categoryEmojis.entrySet().stream().filter(entry -> category.contains(entry.getKey())).map(Map.Entry::getValue).findFirst().orElse(":fork_knife_plate:")
 		);
@@ -113,16 +113,16 @@ public class CanteenUtil {
 						.title("Gerichte in " + canteen.getName())
 						.description(Util.formatHumanReadableDate(date) + " (" + Util.formatDayDifference(Util.dateToDayDifference(date)) + ")")
 						.addAllFields(meals.stream().map(TupleUtils.function((meal, rating) -> {
-							String mealTitle = getEmojiForMeal(meal) + " " + meal.name();
-							if(rating.isPresent()) mealTitle += " " + formatRating(rating.get());
-							String mealDescription = meal.category();
+							String mealTitle = getEmojiForMeal(meal) + " " + meal.getName();
+							if(rating.isPresent()) mealTitle += "\n" + formatRating(rating.get());
+							String mealDescription = meal.getCategory();
 							double price = meal.getStudentPrice();
 							if(price > 0){
 								mealDescription += "\n" + formatPrice(price);
 								double othersPrice = meal.getOthersPrice();
 								if(othersPrice > 0 && othersPrice != price) mealDescription += " (" + formatPrice(othersPrice) + ")";
 							}
-							boolean shouldInline = !(meal.category().equalsIgnoreCase("hauptbeilagen") || meal.category().equalsIgnoreCase("nebenbeilage"));
+							boolean shouldInline = !(meal.getCategory().equalsIgnoreCase("hauptbeilagen") || meal.getCategory().equalsIgnoreCase("nebenbeilage"));
 							return EmbedCreateFields.Field.of(mealTitle, mealDescription, shouldInline);
 						})).collect(Collectors.toList()))
 						.build()
@@ -152,8 +152,8 @@ public class CanteenUtil {
 	}
 	
 	public static double scoreMealSearchMatch(Meal meal, String search){
-		String mealName = meal.name().toLowerCase();
-		String mealCategory = meal.category().toLowerCase();
+		String mealName = meal.getName().toLowerCase();
+		String mealCategory = meal.getCategory().toLowerCase();
 		return scoreSearchMatch(search.toLowerCase(), mealName, mealCategory);
 	}
 	

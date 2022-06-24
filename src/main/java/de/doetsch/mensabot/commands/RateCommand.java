@@ -81,6 +81,7 @@ public class RateCommand extends Command {
 											dateSelectId,
 											days.stream()
 													.sorted(Comparator.comparing(tuple -> tuple.getT1().getKey()))
+													.limit(25)
 													.map(tuple -> {
 														Instant date = Instant.now().plus(tuple.getT2(), ChronoUnit.DAYS);
 														return SelectMenu.Option.of(Util.formatHumanReadableDate(date) + " (" + Util.formatDayDifference(tuple.getT2()) + ")", tuple.getT1().getKey());
@@ -101,7 +102,8 @@ public class RateCommand extends Command {
 										return Mono.empty();
 									})
 					);
-				}));
+				})
+		);
 	}
 	
 	private Mono<Void> handleDateSelect(SelectMenuInteractionEvent event, List<Tuple2<Map.Entry<String, List<Meal>>, Integer>> days){
@@ -121,7 +123,8 @@ public class RateCommand extends Command {
 				event.editReply(InteractionReplyEditSpec.builder()
 						.contentOrNull("Welches Gericht möchtest du bewerten?")
 						.addComponent(ActionRow.of(SelectMenu.of(mealSelectId, meals.stream()
-								.map(meal -> SelectMenu.Option.of(Util.trim(meal.category() + ": " + meal.name(), 100), Util.trim(meal.name(), 100)))
+								.limit(25)
+								.map(meal -> SelectMenu.Option.of(Util.trim(meal.getCategory() + ": " + meal.getName(), 100), Util.trim(meal.getName(), 100)))
 								.collect(Collectors.toList())
 						)))
 						.build()
@@ -141,7 +144,8 @@ public class RateCommand extends Command {
 	}
 	
 	private Mono<Void> handleMealSelect(SelectMenuInteractionEvent event, List<Meal> meals){
-		String meal = event.getValues().get(0);
+		String mealName = event.getValues().get(0);
+		Meal meal = meals.stream().filter(m -> Util.trim(m.getName(), 100).equals(mealName)).findAny().orElseThrow();
 		// discord actually verifies select menus on their side
 		//if(meals.stream().noneMatch(m -> Util.trim(m.name(), 100).equals(meal))) return Mono.empty();
 		String buttonsBaseId = UUID.randomUUID().toString();
@@ -171,7 +175,7 @@ public class RateCommand extends Command {
 		));
 	}
 	
-	private Mono<Void> handleRatingClick(ButtonInteractionEvent event, String buttonBaseId, String meal){
+	private Mono<Void> handleRatingClick(ButtonInteractionEvent event, String buttonBaseId, Meal meal){
 		int rating = switch(event.getCustomId().substring(buttonBaseId.length())){
 			case "1" -> 1;
 			case "2" -> 2;
@@ -182,7 +186,7 @@ public class RateCommand extends Command {
 		};
 		if(rating == -1) return Mono.empty();
 		return event.deferReply()
-				.then(RatingRepository.save(new Rating(event.getInteraction().getUser().getId().asLong(), meal, rating)))
+				.then(RatingRepository.save(new Rating(event.getInteraction().getUser().getId().asLong(), meal.getCanteen().getCity(), meal.getName(), rating)))
 				.onErrorResume(err -> {
 					logger.error("Error while saving rating", err);
 					return event.editReply("Beim Speichern der Bewertung ist ein Fehler aufgetreten.")
