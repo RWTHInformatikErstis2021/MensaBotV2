@@ -6,9 +6,15 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.postgresql.client.SSLMode;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;
+import name.nkonev.r2dbc.migrate.core.PostgreSqlQueries;
+import name.nkonev.r2dbc.migrate.core.R2dbcMigrate;
+import name.nkonev.r2dbc.migrate.core.R2dbcMigrateProperties;
+import name.nkonev.r2dbc.migrate.reader.ReflectionsClasspathResourceReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public class DatabaseConfig {
 	
@@ -30,14 +36,10 @@ public class DatabaseConfig {
 	}
 	
 	public static Mono<Boolean> initializeDatabase(){
-		return getConnection().flatMapMany(connection -> connection.createStatement(
-				"CREATE TABLE IF NOT EXISTS ratings (\n" +
-						"    userId BIGINT,\n" +
-						"    meal VARCHAR(100),\n" +
-						"    rating INTEGER,\n" +
-						"    PRIMARY KEY (userId, meal)\n" +
-						");"
-		).execute()).then(Mono.just(true))
+		R2dbcMigrateProperties properties = new R2dbcMigrateProperties();
+		properties.setResourcesPaths(List.of("db/migration"));
+		return R2dbcMigrate.migrate(connectionFactory, properties, new ReflectionsClasspathResourceReader(), new PostgreSqlQueries(dotenv.get("DATABASE_NAME"), "migrations", "migrations_lock"))
+				.then(Mono.just(true))
 				.onErrorResume(err -> {
 					logger.error("Error while initializing database", err);
 					return Mono.just(false);
