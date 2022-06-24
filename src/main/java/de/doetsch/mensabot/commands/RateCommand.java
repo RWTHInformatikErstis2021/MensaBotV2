@@ -198,7 +198,7 @@ public class RateCommand extends Command {
 				})
 				.flatMap(ignored -> event.editReply(InteractionReplyEditSpec.builder()
 						.allowedMentionsOrNull(AllowedMentions.suppressAll())
-						.contentOrNull(meal + " wurde mit " + ":star:".repeat(rating) + " bewertet.")
+						.contentOrNull(meal.getName() + " wurde mit " + ":star:".repeat(rating) + " bewertet.")
 						.build()
 				))
 				.switchIfEmpty(event.editReply("Beim Bewerten des Gerichts ist ein Fehler aufgetreten."))
