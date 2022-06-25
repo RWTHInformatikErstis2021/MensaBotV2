@@ -2,7 +2,6 @@ package de.doetsch.mensabot.data.types;
 
 import de.doetsch.mensabot.data.DatabaseConfig;
 import de.doetsch.mensabot.util.Util;
-import io.r2dbc.spi.Result;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import org.apache.logging.log4j.LogManager;
@@ -45,12 +44,8 @@ public class RatingRepository {
 						.bind("$4", rating.getRating())
 						.execute()
 				)
-				.flatMap(Result::getRowsUpdated).cast(Object.class).flatMap(o -> {
-					// wtf why is it returning a Mono<Long> that actually contains an Integer??
-					if(o instanceof Integer) return Mono.just((int)o);
-					else if(o instanceof Long) return Mono.just((int)(long)o);
-					else return Mono.just(-1);
-				}).next()
+				.flatMap(DatabaseConfig::getRowsUpdated)
+				.next()
 				.onErrorResume(err -> {
 					logger.error("Error while saving rating", err);
 					return Mono.empty();

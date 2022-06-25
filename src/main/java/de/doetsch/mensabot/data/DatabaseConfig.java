@@ -6,6 +6,7 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.postgresql.client.SSLMode;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactory;
+import io.r2dbc.spi.Result;
 import name.nkonev.r2dbc.migrate.core.PostgreSqlQueries;
 import name.nkonev.r2dbc.migrate.core.R2dbcMigrate;
 import name.nkonev.r2dbc.migrate.core.R2dbcMigrateProperties;
@@ -44,6 +45,15 @@ public class DatabaseConfig {
 					logger.error("Error while initializing database", err);
 					return Mono.just(false);
 				});
+	}
+	
+	public static Mono<Integer> getRowsUpdated(Result result){
+		return Mono.from(result.getRowsUpdated()).cast(Object.class).map(o -> {
+			// wtf why is it returning a Mono<Long> that actually contains an Integer??
+			if(o instanceof Integer) return (int)o;
+			else if(o instanceof Long) return (int)(long)o;
+			else return -1;
+		});
 	}
 	
 }
