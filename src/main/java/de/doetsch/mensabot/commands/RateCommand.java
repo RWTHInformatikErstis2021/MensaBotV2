@@ -56,11 +56,11 @@ public class RateCommand extends Command {
 	}
 	
 	@Override
-	Mono<Void> execute(ChatInputInteractionEvent event){
+	Mono<Void> execute(ChatInputInteractionEvent event, int defaultCanteenId){
 		int canteenId = event.getOption("mensa")
 				.flatMap(ApplicationCommandInteractionOption::getValue)
 				.map(value -> (int)value.asLong())
-				.orElse(Canteen.DefaultCanteen.ACADEMICA.getId());
+				.orElse(defaultCanteenId);
 		String dateSelectId = UUID.randomUUID().toString();
 		return event.deferReply().withEphemeral(true).then(CanteenAPI.getCanteen(canteenId)
 				.flatMap(Canteen::getMeals)
@@ -209,7 +209,7 @@ public class RateCommand extends Command {
 	}
 	
 	@Override
-	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event){
+	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event, int defaultCanteenId){
 		if(event.getFocusedOption().getName().equals("mensa")){
 			String input = event.getFocusedOption().getValue()
 					.map(ApplicationCommandInteractionOptionValue::getRaw)

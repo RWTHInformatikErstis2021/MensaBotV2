@@ -4,12 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Workaround for r2dbc returning wrong type producing ClassCastException">
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Fix rate command sending whole meal instead of just name">
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettingsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__create_guild_settings.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,6 +123,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Aaron\Workspaces\IntelliJ\MensaBotV2" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Aaron\Workspaces\IntelliJ\MensaBotV2\src\main\resources\db\migration" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.BotMain">
     <configuration name="BotMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -130,6 +140,11 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
+      <script-file value="2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" />
+      <script-mode>FILE</script-mode>
+      <method v="2" />
     </configuration>
     <configuration name="MensaBotV2 [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -154,10 +169,12 @@
     </configuration>
     <list>
       <item itemvalue="Application.BotMain" />
+      <item itemvalue="Database Script.2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" />
       <item itemvalue="Gradle.MensaBotV2 [jar]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Database Script.2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" />
         <item itemvalue="Gradle.MensaBotV2 [jar]" />
         <item itemvalue="Application.BotMain" />
       </list>
@@ -183,7 +200,8 @@
       <workItem from="1655580223178" duration="214000" />
       <workItem from="1655580467474" duration="21489000" />
       <workItem from="1655680335023" duration="52406000" />
-      <workItem from="1655967947776" duration="2148000" />
+      <workItem from="1655967947776" duration="12668000" />
+      <workItem from="1655998243475" duration="11436000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1655336619322</created>
@@ -416,7 +434,91 @@
       <option name="project" value="LOCAL" />
       <updated>1655915321217</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Improve date readability">
+      <created>1655970254806</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1655970254806</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Update log4j config">
+      <created>1655977171664</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1655977171664</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Fix CommandHandler error logging">
+      <created>1655977224962</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1655977224962</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Add canteen auto-completion to MensaCommand">
+      <created>1655977319180</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1655977319180</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Update log4j pattern">
+      <created>1655992429665</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1655992429667</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Fix CanteenUtil.scoreSearchMatch to return empty with empty query">
+      <created>1655992514204</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1655992514204</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Fix RateCommand response when canteen did not open recently">
+      <created>1655992560143</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1655992560143</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Add city as meal property">
+      <created>1656084154534</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1656084154534</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Add city as meal property">
+      <created>1656084233443</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1656084233443</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Add db migration library">
+      <created>1656084286330</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1656084286330</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Fix rating formatting">
+      <created>1656084602733</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1656084602734</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Fix rate command sending whole meal instead of just name">
+      <created>1656084804130</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1656084804130</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,16 +536,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix charset issues" />
-    <MESSAGE value="Add command autocompletion capability" />
-    <MESSAGE value="Add postgresql database" />
-    <MESSAGE value="Add match scoring for meal/canteen search" />
-    <MESSAGE value="Add capability to get old meals from canteens&#10;&#10;When requesting all meals, canteens/:id/meals is requested. That&#10;only returns meals from the day it was requested on and the future.&#10;However, old data can be interesting as well. With this commit, the&#10;meals from the previous week (seven days) are requested using&#10;the /canteens/:id/days/:day/meals endpoint. Additionally, the&#10;Canteen.getMeals function will now request meals for the specified&#10;date, if it is not included in the map returned by the default request." />
-    <MESSAGE value="Change meal emojis from map to list" />
-    <MESSAGE value="Update meal embed description" />
-    <MESSAGE value="Update canteen command auto completion" />
-    <MESSAGE value="Add error handling/logging" />
-    <MESSAGE value="Fix DatabaseConfig.initializeDatabase bypass" />
     <MESSAGE value="Add more meal emojis" />
     <MESSAGE value="Update max meal name length to match discords value limit" />
     <MESSAGE value="Add RateCommand" />
@@ -454,12 +546,22 @@
     <MESSAGE value="Implement Meal#getRating" />
     <MESSAGE value="Add log4j2 config" />
     <MESSAGE value="Add port option to database config" />
-    <MESSAGE value="Update log4j pattern" />
     <MESSAGE value="Fix error handling in RateCommand" />
     <MESSAGE value="Fix parameter binding in RatingRepository" />
     <MESSAGE value="Enable SSL in DatabaseConfig" />
     <MESSAGE value="Workaround for r2dbc returning wrong type producing ClassCastException" />
-    <option name="LAST_COMMIT_MESSAGE" value="Workaround for r2dbc returning wrong type producing ClassCastException" />
+    <MESSAGE value="Improve date readability" />
+    <MESSAGE value="Update log4j config" />
+    <MESSAGE value="Fix CommandHandler error logging" />
+    <MESSAGE value="Add canteen auto-completion to MensaCommand" />
+    <MESSAGE value="Update log4j pattern" />
+    <MESSAGE value="Fix CanteenUtil.scoreSearchMatch to return empty with empty query" />
+    <MESSAGE value="Fix RateCommand response when canteen did not open recently" />
+    <MESSAGE value="Add city as meal property" />
+    <MESSAGE value="Add db migration library" />
+    <MESSAGE value="Fix rating formatting" />
+    <MESSAGE value="Fix rate command sending whole meal instead of just name" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix rate command sending whole meal instead of just name" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

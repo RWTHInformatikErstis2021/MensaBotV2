@@ -8,8 +8,8 @@ import reactor.core.publisher.Mono;
 public abstract class Command {
 	
 	abstract ApplicationCommandRequest getCommand();
-	abstract Mono<Void> execute(ChatInputInteractionEvent event);
-	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event){
+	abstract Mono<Void> execute(ChatInputInteractionEvent event, int defaultCanteenId);
+	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event, int defaultCanteenId){
 		return Mono.empty();
 	}
 	

@@ -55,12 +55,12 @@ public class MensaCommand extends Command {
 	}
 	
 	@Override
-	public Mono<Void> execute(ChatInputInteractionEvent event){
+	public Mono<Void> execute(ChatInputInteractionEvent event, int defaultCanteenId){
 		return event.deferReply().then(event.getInteraction().getCommandInteraction().map(interaction -> {
 			int canteenId = interaction.getOption("mensa")
 					.flatMap(ApplicationCommandInteractionOption::getValue)
 					.map(value -> (int)value.asLong())
-					.orElse(Canteen.DefaultCanteen.ACADEMICA.getId());
+					.orElse(defaultCanteenId);
 			Instant day = Instant.now().plus(interaction.getOption("tag")
 					.flatMap(ApplicationCommandInteractionOption::getValue)
 					.map(value -> (int)value.asLong())
@@ -75,7 +75,7 @@ public class MensaCommand extends Command {
 	}
 	
 	@Override
-	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event){
+	public Mono<Void> autoComplete(ChatInputAutoCompleteEvent event, int defaultCanteenId){
 		if(event.getFocusedOption().getName().equals("tag")){
 			String input = event.getFocusedOption().getValue()
 					.map(ApplicationCommandInteractionOptionValue::getRaw)
@@ -84,7 +84,7 @@ public class MensaCommand extends Command {
 			int canteenId = event.getOption("canteen")
 					.flatMap(ApplicationCommandInteractionOption::getValue)
 					.map(value -> (int)value.asLong())
-					.orElse(Canteen.DefaultCanteen.ACADEMICA.getId());
+					.orElse(defaultCanteenId);
 			Map<String, Integer> dates = new HashMap<>();
 			dates.put("gestern", -1);
 			dates.put("heute", 0);

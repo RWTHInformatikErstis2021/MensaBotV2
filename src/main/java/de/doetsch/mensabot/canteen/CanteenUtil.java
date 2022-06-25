@@ -1,5 +1,7 @@
 package de.doetsch.mensabot.canteen;
 
+import de.doetsch.mensabot.data.types.GuildSettings;
+import de.doetsch.mensabot.data.types.GuildSettingsRepository;
 import de.doetsch.mensabot.util.Util;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -17,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -171,6 +174,18 @@ public class CanteenUtil {
 			else score -= 0.9 / searchParts.length;
 		}
 		return score;
+	}
+	
+	private static final Map<Long, Integer> guildDefaultCanteens = new ConcurrentHashMap<>();
+	public static Mono<Integer> getDefaultCanteenId(long guildId){
+		if(guildDefaultCanteens.containsKey(guildId)) return Mono.just(guildDefaultCanteens.get(guildId));
+		else return GuildSettingsRepository.findById(guildId)
+				.map(GuildSettings::getDefaultCanteenId)
+				.doOnNext(id -> guildDefaultCanteens.put(guildId, id));
+	}
+	public static Mono<Integer> setDefaultCanteenId(long guildId, int canteenId){
+		return GuildSettingsRepository.setDefaultCanteenId(guildId, canteenId)
+				.doOnNext(ignored -> guildDefaultCanteens.put(guildId, canteenId));
 	}
 	
 }

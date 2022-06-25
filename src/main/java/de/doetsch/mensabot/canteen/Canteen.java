@@ -103,22 +103,4 @@ public final class Canteen {
 				"coordinates=" + coordinates + ']';
 	}
 	
-	public enum DefaultCanteen {
-		ACADEMICA(187, "Academica"),
-		BISTRO(94, "Bistro"),
-		VITA(96, "Vita"),
-		AHORN(95, "Ahornstraße"),
-		BAYERNALLEE(97, "Bayernallee"),
-		JUELICH(100, "Jülich")
-		;
-		private final int id;
-		private final String displayName;
-		DefaultCanteen(int id, String displayName){
-			this.id = id;
-			this.displayName = displayName;
-		}
-		public int getId(){return id;}
-		public String getDisplayName(){return displayName;}
-	}
-	
 }
