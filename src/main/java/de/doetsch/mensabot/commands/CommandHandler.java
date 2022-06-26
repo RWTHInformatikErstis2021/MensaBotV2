@@ -24,7 +24,8 @@ public class CommandHandler {
 					Map<String, Command> commands = new HashMap<>();
 					for(Command command : new Command[]{
 							new MensaCommand(),
-							new RateCommand()
+							new RateCommand(),
+							new DefaultCanteenCommand()
 					}){
 						commands.put(command.getCommand().name(), command);
 					}
