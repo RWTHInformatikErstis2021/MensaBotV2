@@ -3,6 +3,7 @@ package de.doetsch.mensabot.data.types;
 import de.doetsch.mensabot.data.DatabaseConfig;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
+import io.r2dbc.spi.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
@@ -61,13 +62,15 @@ public class GuildSettingsRepository {
 				});
 	}
 	
-	public static Mono<Integer> setAnnouncementChannelId(long guildId, long channelId){
+	public static Mono<Integer> setAnnouncementChannelId(long guildId, Long channelId){
 		return DatabaseConfig.getConnection()
-				.flatMapMany(connection -> connection.createStatement("UPDATE guilds SET announcementChannelId=$2 WHERE guildId=$1")
-						.bind("$1", guildId)
-						.bind("$2", channelId)
-						.execute()
-				)
+				.flatMapMany(connection -> {
+					Statement stmt = connection.createStatement("UPDATE guilds SET announcementChannelId=$2 WHERE guildId=$1")
+							.bind("$1", guildId);
+					if(channelId != null) stmt = stmt.bind("$2", channelId);
+					else stmt = stmt.bindNull("$2", Long.class);
+					return stmt.execute();
+				})
 				.flatMap(DatabaseConfig::getRowsUpdated)
 				.next()
 				.onErrorResume(err -> {

@@ -25,7 +25,8 @@ public class CommandHandler {
 					for(Command command : new Command[]{
 							new MensaCommand(),
 							new RateCommand(),
-							new DefaultCanteenCommand()
+							new DefaultCanteenCommand(),
+							new AnnouncementChannelCommand()
 					}){
 						commands.put(command.getCommand().name(), command);
 					}

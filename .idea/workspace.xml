@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Fix rate command sending whole meal instead of just name">
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettingsRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__create_guild_settings.sql" afterDir="false" />
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Improve command option type readability">
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/AnnouncementChannelCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/Canteen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/CanteenUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/MensaCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/RateCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/DatabaseConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/RatingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettingsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettingsRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +63,7 @@
       <list>
         <option value="Interface" />
         <option value="Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -201,7 +195,8 @@
       <workItem from="1655580467474" duration="21489000" />
       <workItem from="1655680335023" duration="52406000" />
       <workItem from="1655967947776" duration="12668000" />
-      <workItem from="1655998243475" duration="11436000" />
+      <workItem from="1655998243475" duration="13591000" />
+      <workItem from="1656242689444" duration="11518000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1655336619322</created>
@@ -518,7 +513,35 @@
       <option name="project" value="LOCAL" />
       <updated>1656084804130</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Add DatabaseConfig.getRowsUpdated function&#10;&#10;Somehow Result#getRowsUpdated returns type Mono&lt;Long&gt;, but it actually&#10;is an Integer boxed inside the Mono. That causes a ClassCastException whenever&#10;the variable is used. The new function fixes this by casting the value to an&#10;object and then casting it back to an integer">
+      <created>1656164452643</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1656164452643</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Add default canteen as guild setting">
+      <created>1656165077362</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1656165077362</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Add default canteen command">
+      <created>1656244421480</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1656244421480</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Improve command option type readability">
+      <created>1656327324897</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1656327324897</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -536,10 +559,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add more meal emojis" />
-    <MESSAGE value="Update max meal name length to match discords value limit" />
-    <MESSAGE value="Add RateCommand" />
-    <MESSAGE value="Add message for cases where there were no meals in rate command" />
     <MESSAGE value="Change type of saved canteens to Map for improved performance" />
     <MESSAGE value="Add &quot;möhrchen&quot; to meal emojis" />
     <MESSAGE value="Switch from reply to deferReply in MensaCommand" />
@@ -561,7 +580,11 @@
     <MESSAGE value="Add db migration library" />
     <MESSAGE value="Fix rating formatting" />
     <MESSAGE value="Fix rate command sending whole meal instead of just name" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix rate command sending whole meal instead of just name" />
+    <MESSAGE value="Add DatabaseConfig.getRowsUpdated function&#10;&#10;Somehow Result#getRowsUpdated returns type Mono&lt;Long&gt;, but it actually&#10;is an Integer boxed inside the Mono. That causes a ClassCastException whenever&#10;the variable is used. The new function fixes this by casting the value to an&#10;object and then casting it back to an integer" />
+    <MESSAGE value="Add default canteen as guild setting" />
+    <MESSAGE value="Add default canteen command" />
+    <MESSAGE value="Improve command option type readability" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improve command option type readability" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
