@@ -7,6 +7,7 @@ import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
@@ -29,7 +30,7 @@ public class DefaultCanteenCommand extends Command {
 					ApplicationCommandOptionData.builder()
 							.name("mensa")
 							.description("Die Mensa, die standardmäßig ausgewählt werden soll, wenn keine angegeben ist")
-							.type(4)
+							.type(ApplicationCommandOption.Type.INTEGER.getValue())
 							.required(true)
 							.autocomplete(true)
 							.build()

@@ -13,6 +13,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.SelectMenuInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.component.SelectMenu;
@@ -44,7 +45,7 @@ public class RateCommand extends Command {
 			.addOption(ApplicationCommandOptionData.builder()
 					.name("mensa")
 					.description("Von welcher Mensa du ein Gericht bewerten willst")
-					.type(4)
+					.type(ApplicationCommandOption.Type.INTEGER.getValue())
 					.autocomplete(true)
 					.required(false)
 					.build()

@@ -8,6 +8,7 @@ import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
@@ -35,14 +36,14 @@ public class MensaCommand extends Command {
 					ApplicationCommandOptionData.builder()
 							.name("mensa")
 							.description("Die Mensa, von welcher der Speiseplan ausgegeben werden soll")
-							.type(4)
+							.type(ApplicationCommandOption.Type.INTEGER.getValue())
 							.required(false)
 							.autocomplete(true)
 							.build(),
 					ApplicationCommandOptionData.builder()
 							.name("tag")
 							.description("Der Tag, von dem der Speiseplan ausgegeben werden soll")
-							.type(4)
+							.type(ApplicationCommandOption.Type.INTEGER.getValue())
 							.required(false)
 							.autocomplete(true)
 							.build()
