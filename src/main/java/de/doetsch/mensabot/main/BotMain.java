@@ -1,5 +1,6 @@
 package de.doetsch.mensabot.main;
 
+import de.doetsch.mensabot.canteen.DailyMenuMessage;
 import de.doetsch.mensabot.commands.CommandHandler;
 import de.doetsch.mensabot.data.DatabaseConfig;
 import discord4j.core.DiscordClient;
@@ -27,7 +28,8 @@ public class BotMain {
 					}
 					return discordClient.withGateway(client -> Mono.when(
 							EventHandler.subscribe(client),
-							CommandHandler.register(client)
+							CommandHandler.register(client),
+							DailyMenuMessage.startScheduledMessages(client)
 					).then(client.onDisconnect()));
 				})
 				.onErrorResume(err -> {

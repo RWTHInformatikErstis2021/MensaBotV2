@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Improve command option type readability">
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/AnnouncementChannelCommand.java" afterDir="false" />
+    <list default="true" id="8988108d-292e-4a2c-af1b-ac807441d594" name="Changes" comment="Make GuildSettings#announcementChannelId Optional">
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/canteen/DailyMenuMessage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/commands/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettingsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/data/types/GuildSettingsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/doetsch/mensabot/util/Util.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,8 +60,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Kotlin Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -135,11 +133,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
-      <script-file value="2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" />
-      <script-mode>FILE</script-mode>
-      <method v="2" />
-    </configuration>
     <configuration name="MensaBotV2 [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -163,12 +156,10 @@
     </configuration>
     <list>
       <item itemvalue="Application.BotMain" />
-      <item itemvalue="Database Script.2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" />
       <item itemvalue="Gradle.MensaBotV2 [jar]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Database Script.2e270df2-33bb-44cb-92a7-1d5789a5aa0e.sql" />
         <item itemvalue="Gradle.MensaBotV2 [jar]" />
         <item itemvalue="Application.BotMain" />
       </list>
@@ -196,21 +187,8 @@
       <workItem from="1655680335023" duration="52406000" />
       <workItem from="1655967947776" duration="12668000" />
       <workItem from="1655998243475" duration="13591000" />
-      <workItem from="1656242689444" duration="11518000" />
-    </task>
-    <task id="LOCAL-00001" summary="Initial Commit">
-      <created>1655336619322</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1655336619323</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Add command handling and canteen fetching">
-      <created>1655385797810</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1655385797810</updated>
+      <workItem from="1656242689444" duration="17566000" />
+      <workItem from="1656605619356" duration="2750000" />
     </task>
     <task id="LOCAL-00003" summary="Implement more canteen stuff">
       <created>1655504471894</created>
@@ -541,7 +519,21 @@
       <option name="project" value="LOCAL" />
       <updated>1656327324897</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Add AnnouncementChannelCommand">
+      <created>1656367110704</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1656367110706</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Make GuildSettings#announcementChannelId Optional">
+      <created>1656677949378</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1656677949380</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -559,8 +551,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Change type of saved canteens to Map for improved performance" />
-    <MESSAGE value="Add &quot;möhrchen&quot; to meal emojis" />
     <MESSAGE value="Switch from reply to deferReply in MensaCommand" />
     <MESSAGE value="Implement Meal#getRating" />
     <MESSAGE value="Add log4j2 config" />
@@ -584,7 +574,9 @@
     <MESSAGE value="Add default canteen as guild setting" />
     <MESSAGE value="Add default canteen command" />
     <MESSAGE value="Improve command option type readability" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improve command option type readability" />
+    <MESSAGE value="Add AnnouncementChannelCommand" />
+    <MESSAGE value="Make GuildSettings#announcementChannelId Optional" />
+    <option name="LAST_COMMIT_MESSAGE" value="Make GuildSettings#announcementChannelId Optional" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

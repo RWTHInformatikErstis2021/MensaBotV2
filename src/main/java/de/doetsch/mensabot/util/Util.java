@@ -49,6 +49,14 @@ public class Util {
 		};
 	}
 	
+	public static Instant getNextTime(int hour){
+		ZonedDateTime now = ZonedDateTime.now(timezone);
+		ZonedDateTime next = now.withHour(hour).withMinute(0).withSecond(0).withNano(0);
+		if(now.isAfter(next))
+			next = next.plusDays(1);
+		return next.toInstant();
+	}
+	
 	public static String pad(int number, int length){
 		String s = Integer.toString(number);
 		return "0".repeat(Math.max(0, length - s.length())) + s;
